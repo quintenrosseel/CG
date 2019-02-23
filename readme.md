@@ -1,3 +1,3 @@
 # Computational Geometry: Final Project
 
-This project can be found live on ...
+This project lives on [https://quintenrosseel.github.io/CG/]. 
