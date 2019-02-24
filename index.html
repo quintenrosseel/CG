@@ -38,7 +38,7 @@
                     </h1>
                 </div><!--//branding-->
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item">INFO-F-420: Computational Geometry</li>
+                    <li class="breadcrumb-item">INFO-F-420 Computational Geometry</li>
                     <li class="breadcrumb-item">Quinten Rosseel</li>
                     <li class="breadcrumb-item">VUB</li>
                     <li class="breadcrumb-item">0536798</li>
@@ -50,353 +50,120 @@
                 <div class="doc-body row">
                     <div class="doc-content col-md-9 col-12 order-1">
                         <div class="content-inner">
-                            <section id="introduction" class="doc-section">
-                                <h2 class="section-title">Introduction</h2>
+                            <section id="abstract" class="doc-section">
+                                <h2 class="section-title">Abstract</h2>
                                 <div class="section-block">
                                   <p>
-                                    When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
-                                    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+                                    This project covers <a href="assets/files/megiddo.pdf" target="_blank">Nimrod Megiddo's paper</a>
+                                    <a class="scrollto" href="#ref-1">[1]</a> that presents a generalisation of how parallelism can benefit
+                                    the design of serial algorithms in computational problems. In many cases, a good parallel algorithm for one problem
+                                    may turn out to be useful for designing an efficient serial algorithm for another problem.
+                                    <br>
+                                    <br>
+                                    We start by (visually) exploring Meggido's preliminary example that demonstrates his general method, known as parametric search.
+                                    The method uses a <i>decision algorithm</i>, <i>e.g.</i> an algorithm that checks if a given parameter \( \lambda \leq 0 \)
+                                    or \( \lambda \geq 0 \), to solve an <i>optimization problem</i>, <i>e.g.</i> an algorithm that determines a \( \lambda \) such that
+                                    \( F(\lambda) = 0 \) for a given function \( F \). Analysising the example in depth allows us to build up the necessary intuition to proceed. 
+                                    <br>
+                                    <br>
+                                    Next, a more advanced setting is explored in the context of the <i>Minimum Ratio Cycle problem </i> (MRC),
+                                    where the goal is to find a cycle in a graph with edge-costs and edge-times,
+                                    such that the ratio of the total cost to the total time of edges on the cycle is minimized.
+                                    This problem was originally coined by <a href="assets/files/dantzig_et_al.pdf" target="_blank">Dantzig et al.</a>
+                                    <a class="scrollto" href="#ref-2">[2]</a> in an attempt to solve a ship routing problem.
+                                    <br>
+                                    <br>
+                                    Finally, we present an attempt at an implementation of the parameterization method for the
+                                    MRC, inspired on <a href="assets/files/megiddo_earlier.pdf" target="_blank">Megiddo's earlier work</a>
+                                    <a class="scrollto" href="#ref-3">[3]</a> and using Mozilla’s Web Worker API for
+                                    multi-threaded javascript programs.
+
                                   </p>
                                 </div>
                             </section><!--//doc-section-->
-                            <section id="installation-section" class="doc-section">
-                                <h2 class="section-title">Installation</h2>
-                                <div id="step1"  class="section-block">
-                                    <h3 class="block-title">Step One</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.
-                                    </p>
-                                    <div class="code-block">
-                                        <h6>Default code example:</h6>
-                                        <p><code>bower install &lt;package&gt;</code></p>
-                                        <p><code>npm install &lt;package&gt;</code></p>
-                                    </div><!--//code-block-->
-                                </div><!--//section-block-->
-                                <div id="step2"  class="section-block">
-                                    <h3 class="block-title">Step Two</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-                                    </p>
-                                    <div class="row">
-                                        <div class="col-md-6 col-12">
-                                            <h6>Un-ordered list example</h6>
-                                            <ul class="list">
-        										<li>Lorem ipsum dolor sit amet.</li>
-        										<li>Aliquam tincidunt mauris.</li>
-        										<li>Ultricies eget vel aliquam libero.
-        											<ul>
-        												<li>Turpis pulvinar</li>
-        												<li>Feugiat scelerisque</li>
-        												<li>Ut tincidunt</li>
-        											</ul>
-        										</li>
-        										<li>Pellentesque habitant morbi.</li>
-        										<li>Praesent dapibus, neque id.</li>
-        									</ul>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <h6>Ordered list example</h6>
-                                            <ol class="list">
-        										<li>Lorem ipsum dolor sit amet.</li>
-        										<li>Aliquam tincidunt mauris.</li>
-        										<li>Ultricies eget vel aliquam libero.
-        											<ul>
-        												<li>Turpis pulvinar</li>
-        												<li>Feugiat scelerisque</li>
-        												<li>Ut tincidunt</li>
-        											</ul>
-        										</li>
-        										<li>Pellentesque habitant morbi.</li>
-        										<li>Praesent dapibus, neque id.</li>
-        									</ol>
-                                        </div>
-                                    </div><!--//row-->
-                                </div><!--//section-block-->
-                                <div id="step3"  class="section-block">
-                                    <h3 class="block-title">Step Three</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.
-                                    </p>
-                                </div><!--//section-block-->
-                            </section><!--//doc-section-->
-
-                            <section id="code-section" class="doc-section">
-                                <h2 class="section-title">Code</h2>
+                            <section id="preliminary" class="doc-section">
+                                <h2 class="section-title">Megiddo's Preliminary Example</h2>
                                 <div class="section-block">
-                                    <p>
-                                        <a href="https://prismjs.com/" target="_blank">PrismJS</a> is used as the syntax highlighter here. You can <a href="https://prismjs.com/download.html" target="_blank">build your own version</a> via their website should you need to.
-                                    </p>
+                                  <p>
+                                    ...
+                                  </p>
+                                </div>
+                            </section><!--//doc-section-->
+                            <section id="references" class="doc-section">
+                                <h2 class="section-title">References</h2>
+                                <div class="section-block">
 
-                                </div><!--//section-block-->
-                                <div id="html" class="section-block">
-
-                                    <div class="callout-block callout-success">
-                                        <div class="icon-holder">
-                                            <i class="fas fa-thumbs-up"></i>
-                                        </div><!--//icon-holder-->
-                                        <div class="content">
-                                            <h4 class="callout-title">Useful Tip:</h4>
-                                            <p>You can use this online <a href="https://mothereff.in/html-entities" target="_blank">HTML entity encoder/decoder</a> to generate your code examples.</p>
-                                        </div><!--//content-->
+                                  <div class="container" id="ref-1">
+                                    <div class="row">
+                                      <div class="col-1">
+                                        <p>[1]</p>
+                                      </div>
+                                      <div class="col-11">
+                                        <p>
+                                          Megiddo, N. (1981, October). Applying parallel computation algorithms in the design of serial algorithms.
+                                          In 22nd Annual Symposium on Foundations of Computer Science (sfcs 1981) (pp. 399-408). IEEE.
+                                        </p>
+                                      </div>
                                     </div>
-
-                                <div id="javascript" class="section-block">
-                                    <div class="code-block">
-                                        <h6>JavaScript Code Example</h6>
-                                        <pre><code class="language-javascript">
-function myFunction(a, b) {
-  return a * b;
-}
-
-document.getElementById(&quot;demo&quot;).innerHTML = myFunction(4, 3);
-
-                                    </code></pre>
-                                    </div><!--//code-block-->
-                                </div><!--//section-block-->
-
-                            </section><!--//doc-section-->
-                            <section id="callouts-section" class="doc-section">
-                                <h2 class="section-title">Callouts</h2>
-                                <div class="section-block">
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                                    </p>
-                                </div>
-
-                                <div class="section-block">
-                                    <div class="callout-block callout-info">
-                                        <div class="icon-holder">
-                                            <i class="fas fa-info-circle"></i>
-                                        </div><!--//icon-holder-->
-                                        <div class="content">
-                                            <h4 class="callout-title">Aenean imperdiet</h4>
-                                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium <code>&lt;code&gt;</code> , Nemo enim ipsam voluptatem quia voluptas <a href="#">link example</a> sit aspernatur aut odit aut fugit.</p>
-                                        </div><!--//content-->
-                                    </div><!--//callout-block-->
-
-                                    <div class="callout-block callout-warning">
-                                        <div class="icon-holder">
-                                            <i class="fas fa-bug"></i>
-                                        </div><!--//icon-holder-->
-                                        <div class="content">
-                                            <h4 class="callout-title">Morbi posuere</h4>
-                                            <p>Nunc hendrerit odio quis dignissim efficitur. Proin ut finibus libero. Morbi posuere fringilla felis eget sagittis. Fusce sem orci, cursus in tortor <a href="#">link example</a> tellus vel diam viverra elementum.</p>
-                                        </div><!--//content-->
-                                    </div><!--//callout-block-->
-
-                                    <div class="callout-block callout-success">
-                                        <div class="icon-holder">
-                                            <i class="fas fa-thumbs-up"></i>
-                                        </div><!--//icon-holder-->
-                                        <div class="content">
-                                            <h4 class="callout-title">Lorem ipsum dolor sit amet</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. <a href="#">Link example</a> aenean commodo ligula eget dolor.</p>
-                                        </div><!--//content-->
-                                    </div><!--//callout-block-->
-
-                                    <div class="callout-block callout-danger">
-                                        <div class="icon-holder">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </div><!--//icon-holder-->
-                                        <div class="content">
-                                            <h4 class="callout-title">Interdum et malesuada</h4>
-                                            <p>Morbi eget interdum sapien. Donec sed turpis sed nulla lacinia accumsan vitae ut tellus. Aenean vestibulum <a href="#">Link example</a> maximus ipsum vel dignissim. Morbi ornare elit sit amet massa feugiat, viverra dictum ipsum pellentesque. </p>
-                                        </div><!--//content-->
-                                    </div><!--//callout-block-->
-                                </div>
-                            </section><!--//doc-section-->
-                            <section id="tables-section" class="doc-section">
-                                <h2 class="section-title">Tables</h2>
-                                <div class="section-block">
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.
-                                    </p>
-                                </div>
-                                <div class="section-block">
-                                    <h6>Basic Table</h6>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Mark</td>
-                                                    <td>Otto</td>
-                                                    <td>@mdo</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Jacob</td>
-                                                    <td>Thornton</td>
-                                                    <td>@fat</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Larry</td>
-                                                    <td>the Bird</td>
-                                                    <td>@twitter</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div><!--//table-responsive-->
-                                    <h6>Striped Table</h6>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Mark</td>
-                                                    <td>Otto</td>
-                                                    <td>@mdo</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Jacob</td>
-                                                    <td>Thornton</td>
-                                                    <td>@fat</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Larry</td>
-                                                    <td>the Bird</td>
-                                                    <td>@twitter</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div><!--//table-responsive-->
-                                    <h6>Bordered Table</h6>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Mark</td>
-                                                    <td>Otto</td>
-                                                    <td>@mdo</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Jacob</td>
-                                                    <td>Thornton</td>
-                                                    <td>@fat</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Larry</td>
-                                                    <td>the Bird</td>
-                                                    <td>@twitter</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div><!--//table-responsive-->
-                                </div><!--//section-block-->
-                            </section><!--//doc-section-->
-                            <section id="buttons-section" class="doc-section">
-                                <h2 class="section-title">Buttons</h2>
-                                <div class="section-block">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec imperdiet turpis. Curabitur aliquet pulvinar ultrices. Etiam at posuere leo. Proin ultrices ex et dapibus feugiat <a href="#">link example</a> aenean purus leo, faucibus at elit vel, aliquet scelerisque dui. Etiam quis elit euismod, imperdiet augue sit amet, imperdiet odio. Aenean sem erat, hendrerit  eu gravida id, dignissim ut ante. Nam consequat porttitor libero euismod congue.
-                                    </p>
+                                  </div>
+                                  <div class="container" id="ref-2">
                                     <div class="row">
-                                        <div class="col-md-6 col-12">
-                                            <h6>Basic Buttons</h6>
-                                            <ul class="list list-unstyled">
-                                                <li><a href="#" class="btn btn-primary">Primary Button</a></li>
-                                                <li><a href="#" class="btn btn-green">Green Button</a></li>
-                                                <li><a href="#" class="btn btn-blue">Blue Button</a></li>
-                                                <li><a href="#" class="btn btn-orange">Orange Button</a></li>
-                                                <li><a href="#" class="btn btn-red">Red Button</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <h6>CTA Buttons</h6>
-                                            <ul class="list list-unstyled">
-                                                <li><a href="#" class="btn btn-primary btn-cta"><i class="fas fa-download"></i> Download Now</a></li>
-                                                <li><a href="#" class="btn btn-green btn-cta"><i class="fas fa-code-branch"></i> Fork Now</a></li>
-                                                <li><a href="#" class="btn btn-blue btn-cta"><i class="fas fa-play-circle"></i> Find Out Now</a></li>
-                                                <li><a href="#" class="btn btn-orange btn-cta"><i class="fas fa-bug"></i> Report Bugs</a></li>
-                                                <li><a href="#" class="btn btn-red btn-cta"><i class="fas fa-exclamation-circle"></i> Submit Issues</a></li>
-                                            </ul>
-                                        </div>
-                                    </div><!--//row-->
-                                </div><!--//section-block-->
-                            </section><!--//doc-section-->
-                            <section id="video-section" class="doc-section">
-                                <h2 class="section-title">Video</h2>
-                                <div class="section-block">
+                                      <div class="col-1">
+                                        <p>[2]</p>
+                                      </div>
+                                      <div class="col-11">
+                                        <p>
+                                          Dantzig, G. B., Blattner, W. and Rao, M. R. (1967). Finding a Cycle in a Graph
+                                          with Minimum Cost to Time Ratio with Application to a Ship Routing Problem.
+                                          In Theory of Graphs, P. Rosenstiehl, ed. Dunod, Paris, and Gordon and
+                                          Breach, New York. 77-84.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="container" id="ref-3">
                                     <div class="row">
-                                        <div class="col-md-6 col-12">
-                                            <h6>Responsive Video 16:9</h6>
-                                            <!-- 16:9 aspect ratio -->
-                                            <div class="embed-responsive embed-responsive-16by9">
-                                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/ejBkOjEG6F0?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <h6>Responsive Video 4:3</h6>
-                                            <!-- 4:3 aspect ratio -->
-                                            <div class="embed-responsive embed-responsive-4by3">
-                                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/ejBkOjEG6F0?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
-                                            </div>
-                                        </div>
-                                    </div><!--//row-->
-                                </div><!--//section-block-->
-                            <section id="icons-section" class="doc-section">
-                                <h2 class="section-title">Icons</h2>
-                                <div class="section-block">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec imperdiet turpis. Curabitur aliquet pulvinar ultrices. Etiam at posuere leo. Proin ultrices ex et dapibus feugiat <a href="#">link example</a> aenean purus leo, faucibus at elit vel, aliquet scelerisque dui. Etiam quis elit euismod, imperdiet augue sit amet, imperdiet odio. Aenean sem erat, hendrerit  eu gravida id, dignissim ut ante. Nam consequat porttitor libero euismod congue.
-                                    </p>
-                                </div><!--//section-block-->
-                                <div class="section-block">
-                                    <h6>Elegant Icon Font</h6>
-                                    <a href="https://www.elegantthemes.com/blog/resources/elegant-icon-font" target="_blank"><img class="img-fluid" src="assets/images/demo/elegant-icon-font.jpg" alt="elegant icons" /></a>
-                                </div><!--//section-block-->
-                                <div class="section-block">
-                                    <h6>FontAwesome Icon Font</h6>
-                                    <a href="https://fortawesome.github.io/Font-Awesome/" target="_blank"><img class="img-fluid" src="assets/images/demo/fontawesome-icons.png" alt="fontawesome" /></a>
-                                </div><!--//section-block-->
+                                      <div class="col-1">
+                                        <p>[3]</p>
+                                      </div>
+                                      <div class="col-11">
+                                        <p>
+                                            Megiddo, N. (1978, May).
+                                            Combinatorial optimization with rational objective functions.
+                                            In Proceedings of the tenth annual ACM symposium on Theory of computing (pp. 1-12). ACM.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
 
-                            </section><!--//doc-section-->
-
+                                </div>
                             </section><!--//doc-section-->
                         </div><!--//content-inner-->
                     </div><!--//doc-content-->
                     <div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
                         <div id="doc-nav" class="doc-nav">
 	                            <nav id="doc-menu" class="nav doc-menu flex-column sticky">
-	                                <a class="nav-link scrollto" href="#introduction">Introduction</a>
-	                                <a class="nav-link scrollto" href="#installation-section">Preliminary Example</a>
+	                                <a class="nav-link scrollto" href="#abstract">Abstract</a>
+                                  <a class="nav-link scrollto" href="#preliminary">Megiddo's Preliminary Example</a>
+                                  <a class="nav-link scrollto" href="#references">References</a>
+                                <!--
+	                                <a class="nav-link scrollto" href="#installation-section">Head</a>
                                     <nav class="doc-sub-menu nav flex-column">
                                         <a class="nav-link scrollto" href="#step1">Step One</a>
                                         <a class="nav-link scrollto" href="#step2">Step Two</a>
                                         <a class="nav-link scrollto" href="#step3">Step Three</a>
-                                    </nav><!--//nav-->
+                                    </nav>
 	                                <a class="nav-link scrollto" href="#code-section">Code</a>
                                     <nav class="doc-sub-menu nav flex-column">
                                         <a class="nav-link scrollto" href="#javascript">JavaScript</a>
-                                    </nav><!--//nav-->
-	                           <!-- <a class="nav-link scrollto" href="#callouts-section">Callouts</a>
+                                    </nav>
+	                                <a class="nav-link scrollto" href="#callouts-section">Callouts</a>
 	                                <a class="nav-link scrollto" href="#tables-section">Tables</a>
 	                                <a class="nav-link scrollto" href="#buttons-section">Buttons</a>
 	                                <a class="nav-link scrollto" href="#video-section">Video</a>
-	                                <a class="nav-link scrollto" href="#icons-section">Icons</a> -->
+	                                <a class="nav-link scrollto" href="#icons-section">Icons</a>
+                                -->
 	                            </nav><!--//doc-menu-->
 
                         </div>
