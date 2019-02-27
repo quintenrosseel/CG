@@ -1364,6 +1364,10 @@ select {
   color: #8A40A7;
 }
 
+#slider1 .slider-selection {
+	background: #BABABA;
+}
+
 @media (max-width: 767.98px) {
   .cards-section .item-inner {
     padding: 30px 15px;
