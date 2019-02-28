@@ -110,7 +110,7 @@ function plot_megiddo_f(sketch, min_range, max_range, a, b) {
 
 // Plot big function F over range [min_range, max_range] with stepsize.
 function plot_megiddo_F(sketch, min_range, max_range, set) {
-  var stepsize = 80;
+  var stepsize = 0.1;
   var steps = (max_range - min_range)/stepsize;
   var n = set.length;
   var f_values = new Array(steps);
@@ -122,25 +122,23 @@ function plot_megiddo_F(sketch, min_range, max_range, set) {
       f_i = set[i];
       points[i] = f_i(lambda);
     }
-    // console.log(points);
-    // console.log(median(points));
+    // console.log(points)
+
     f_values[step] = median(points);
     step++;
   }
-
+  //console.log(f_values);
   // Draw lines for values in f_values
   var step = 0;
   var points = new Array(steps);
-  for(var lambda = min_range; lambda < max_range; lambda = lambda + stepsize) {
+  for(var lambda = min_range; lambda < (max_range-1); lambda = lambda + stepsize) {
     sketch.line(lambda,
-                f_values[i],
+                f_values[step],
                 (lambda+stepsize),
-                f_values[i+1]);
-    points[step] = new Point(lambda, f_values[i]);
+                f_values[step+1]);
+    points[step] = new Point(lambda, f_values[step]);
     step++;
   }
-
-  console.log(points);
 }
 
 
@@ -152,18 +150,58 @@ window.addEventListener('load', function () {
 
   // First function visualisation canvas
   var vis_1 = function(sketch) {
+    // Sketch global vars.
+    var a_1 = Number(document.getElementById('a_1_slider_1').value - 10);
+    var a_2 = Number(document.getElementById('a_2_slider_1').value - 10);
+    var a_3 = Number(document.getElementById('a_3_slider_1').value - 10);
+    var b_1 = Number(document.getElementById('b_1_slider_1').value);
+    var b_2 = Number(document.getElementById('b_2_slider_1').value);
+    var b_3 = Number(document.getElementById('b_3_slider_1').value);
+    var functionSet = new Array(3);
+
+    // Fill functionSet
+    function calculateFunctions() {
+      functionSet[0] = get_megiddo_f(a_1, b_1);
+      functionSet[1] = get_megiddo_f(a_2, b_2);
+      functionSet[2] = get_megiddo_f(a_3, b_3);
+    }
+
+    // Recalculate function set only when needed. (When slider values change)
+    var elements = getElementsByClassName(document, "range-1"), n = elements.length;
+    for (var i = 0; i < n; i++) {
+      var e = elements[i];
+      e.addEventListener("mouseup", function(e){
+        var srcId = e.srcElement.id;
+        var srcVal = Number(e.srcElement.value);
+        if(srcId == "a_1_slider_1") {
+          a_1 = srcVal - 10;
+        } else if (srcId == "a_2_slider_1"){
+          a_2 = srcVal - 10;
+        } else if (srcId == "a_3_slider_1"){
+          a_3 = srcVal - 10;
+        } else if (srcId == "b_1_slider_1") {
+          b_1 = srcVal;
+        } else if (srcId == "b_2_slider_1") {
+          b_2 = srcVal;
+        } else if (srcId == "b_3_slider_1") {
+          b_3 = srcVal;
+        }
+
+        // Refill function set upon change.
+        calculateFunctions();
+      });
+    }
+
+    // Initialise function set
+    calculateFunctions();
+
     sketch.setup = function() {
       sketch.createCanvas(canvasWidth, canvasHeight);
+      sketch.frameRate(10);
     };
+
     sketch.draw = function() {
       // document.getElementById('preliminary').attribute
-
-      // Map to negatives
-      var a_1 = document.getElementById('a_1_slider_1').value - 10;
-      var a_2 = document.getElementById('a_2_slider_1').value - 10;
-      var b_1 = document.getElementById('b_1_slider_1').value;
-      var b_2 = document.getElementById('b_2_slider_1').value;
-
       var canvas = document.getElementById('defaultCanvas0');
       var context = canvas.getContext('2d');
 
@@ -186,20 +224,41 @@ window.addEventListener('load', function () {
       sketch.stroke(247,123,107);
       plot_megiddo_f(sketch, -20, 20, a_1, b_1);
       plot_megiddo_f(sketch, -20, 20, a_2, b_2);
+      plot_megiddo_f(sketch, -20, 20, a_3, b_3);
+
+      // Plot Megiddo's F
+      sketch.noFill();
+      sketch.stroke(88,187,238);
+      plot_megiddo_F(sketch, -20, 20, functionSet);
 
       // Plot Intersection
-      var intersection = megiddo_f_intersect(a_1, b_1, a_2, b_2);
-      if(intersection) {
+      var intersection1 = megiddo_f_intersect(a_1, b_1, a_2, b_2);
+      var intersection2 = megiddo_f_intersect(a_1, b_1, a_3, b_3);
+      var intersection3 = megiddo_f_intersect(a_2, b_2, a_3, b_3);
+
+      if(intersection1) {
         sketch.fill(20);
         sketch.noStroke();
-        sketch.ellipse(intersection.x, intersection.y, 0.1, 0.1)
+        sketch.ellipse(intersection1.x, intersection1.y, 0.1, 0.1)
+      }
+
+      if(intersection2) {
+        sketch.fill(20);
+        sketch.noStroke();
+        sketch.ellipse(intersection2.x, intersection2.y, 0.1, 0.1)
+      }
+
+      if(intersection3) {
+        sketch.fill(20);
+        sketch.noStroke();
+        sketch.ellipse(intersection3.x, intersection3.y, 0.1, 0.1)
       }
 
     };
-    sketch.frameRate(10);
   };
 
   // Second function visualisation canvas.
+  /*
   var vis_2 = function(sketch) {
 
     // Initialise slider values
@@ -280,9 +339,10 @@ window.addEventListener('load', function () {
       plot_megiddo_F(sketch, -400, 400, functionSet);
     };
   };
+  */
 
   // Attach sketches to DOM.
   var myp5_1 = new p5(vis_1, document.getElementById('func-vis-1'));
-  var myp5_2 = new p5(vis_2, document.getElementById('func-vis-2'));
+  // var myp5_2 = new p5(vis_2, document.getElementById('func-vis-2'));
 
 }, false);

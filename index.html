@@ -105,15 +105,17 @@
                                     such that \( a_{i} + b_{i}\lambda_{ij} = a_{j} + b_{j}\lambda_{ij} \) with \( i \neq j\).
                                   </p>
                                   <p class="text-justify">
-                                    <b>Function Visualisation 1</b>
+                                    <b>Function Visualisation</b>
                                     <br> <br>
                                     To showcase how functions from the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) behave, consider
-                                    an interactive visualisation of two functions \( f_{1}(\lambda) = a_{1} + b_{1}\lambda \ \) and \( \
-                                    f_{2}(\lambda) = a_{2} + b_{2}\lambda \ \) below.
+                                    an interactive visualisation of three functions \( f_{1}(\lambda) = a_{1} + b_{1}\lambda, \
+                                    f_{2}(\lambda) = a_{2} + b_{2}\lambda \) and
+                                    \( \ f_{3}(\lambda) = a_{3} + b_{3}\lambda \ \)
+                                    together with their corresponding \( F(\lambda) \) evaluated on \( \{f_{1}(\lambda), f_{2}(\lambda), f_{3}(\lambda) \} \).
 
                                     Notice that \( b_{i} \) is constrained to be positive
-                                    and that the intersection \( \lambda_{12} \) is a critical point for the function \( F(\lambda) \).
-                                    More on the next visualisation.
+                                    and that the intersections marked in black \( \lambda_{12}, \ \lambda_{13} \) and \( \lambda_{23} \) are critical points for \( F(\lambda) \).
+
 
                                     <br><br>
 
@@ -126,7 +128,7 @@
                                           <div class="d-flex justify-content-center my-4">
                                              <span class="font-weight-bold indigo-text mr-2 mt-1">-10</span>
                                               <form class="range-field w-75">
-                                               <input class="custom-range" type="range" step="1" min="0" max="20" id="a_1_slider_1" />
+                                               <input value="12" class="custom-range range-1" type="range" step="1" min="0" max="20" id="a_1_slider_1" />
                                               </form>
                                            <span class="font-weight-bold indigo-text ml-2 mt-1">10</span>
                                          </div>
@@ -137,7 +139,7 @@
                                           <div class="d-flex justify-content-center my-4">
                                              <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
                                               <form class="range-field w-75">
-                                               <input class="custom-range" type="range" step="1" min="0" max="20" id="b_1_slider_1" />
+                                               <input value="0" class="custom-range range-1" type="range" step="1" min="0" max="20" id="b_1_slider_1" />
                                               </form>
                                            <span class="font-weight-bold indigo-text ml-2 mt-1">20</span>
                                          </div>
@@ -148,7 +150,7 @@
                                           <div class="d-flex justify-content-center my-4">
                                              <span class="font-weight-bold indigo-text mr-2 mt-1">-10</span>
                                                 <form class="range-field w-75">
-                                                 <input class="custom-range" type="range" step="1" min="0" max="20" id="a_2_slider_1" />
+                                                 <input value="20" class="custom-range range-1" type="range" step="1" min="0" max="20" id="a_2_slider_1" />
                                                 </form>
                                             <span class="font-weight-bold indigo-text ml-2 mt-1">10</span>
                                           </div>
@@ -159,12 +161,35 @@
                                           <div class="d-flex justify-content-center my-4">
                                              <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
                                                 <form class="range-field w-75">
-                                                 <input class="custom-range" type="range" step="1" min="0" max="20" id="b_2_slider_1" />
+                                                 <input value="4" class="custom-range range-1" type="range" step="1" min="0" max="20" id="b_2_slider_1" />
                                                 </form>
                                             <span class="font-weight-bold indigo-text ml-2 mt-1">20</span>
                                           </div>
                                         </div>
+                                      </div>
 
+                                      <div class="row">
+                                          <div class="col-3 text-center offset-3">
+                                            <label for="a_3_slider_1">\( a_{3} \)</label>
+                                            <div class="d-flex justify-content-center my-4 text-center">
+                                               <span class="font-weight-bold indigo-text mr-2 mt-1">-10</span>
+                                                  <form class="range-field w-75">
+                                                   <input value="0" class="custom-range range-1" type="range" step="1" min="0" max="20" id="a_3_slider_1" />
+                                                  </form>
+                                              <span class="font-weight-bold indigo-text ml-2 mt-1">10</span>
+                                            </div>
+                                          </div>
+
+                                          <div class="col-3 text-center">
+                                            <label for="b_3_slider_1">\( b_{3} \)</label>
+                                            <div class="d-flex justify-content-center my-4 text-center">
+                                               <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                                                  <form class="range-field w-75">
+                                                   <input value="9" class="custom-range range-1" type="range" step="1" min="0" max="20" id="b_3_slider_1" />
+                                                  </form>
+                                              <span class="font-weight-bold indigo-text ml-2 mt-1">20</span>
+                                            </div>
+                                          </div>
 
                                       </div>
                                     </div>
@@ -179,6 +204,8 @@
                                     </p>
 
                                   <p class="text-justify">
+
+                                    <!--
                                     <b>Function Visualisation 2</b>
                                     <br> <br>
                                     In the example below \( F(\lambda) \) is shown with all \( a_{i} \)'s, uniformly drawn from
@@ -186,9 +213,11 @@
                                     an interval \( [b_{min}, b_{max}] \) with \( b_{min}, b_{max} > 0 \). The last slider for \( n \) determines the number of functions in the set
                                     \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \).
 
+                                    -->
+
 
                                     <!-- Function Sliders -->
-                                    <div class="container">
+                                    <!-- <div class="container">
                                       <div class="row">
                                         <div class="col-3 text-center">
                                           <label for="a_1_slider_2">\( a_{min} \)</label>
@@ -246,15 +275,16 @@
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                    <br><br>
+                                    </div> -->
+
+
                                     <!-- Function Visualisation -->
-                                    <div class="container">
+                                    <!-- <div class="container">
                                         <div class="row">
                                             <div class="col-12 text-center" id="func-vis-2">
                                             </div>
                                         </div>
-                                      </div>
+                                      </div> -->
                                     <!-- <ul>
                                       <li> Each \( a, b \) are drawn uniformly in an interval. This interval can be adapted using sliders. </li>
                                       <li> \( n\) can be chosen. </li>
@@ -269,6 +299,8 @@
                                       <li> \( F(\lambda) \) can be evaluated in (\ O(n) \) comparisons using quick median. </li>
                                     </ul>
                                   </p>
+
+
 
                                   <p class="text-justify">
                                     <b>Optimization Algorithm</b>
