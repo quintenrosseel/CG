@@ -210,13 +210,15 @@
                                     <a href="https://math.stackexchange.com/questions/270937/how-can-you-construct-as-many-intersections-as-possible-with-n-lines" target="_blank">
                                       at most \( \frac{n^{2} - n }{2} \) intersections</a>, the upper bound for breakpoints is \( O(n^{2}) \).
                                     <br><br>
-                                    Using the
+                                    If we are given \( \lambda \), we can evaluate \( F(\lambda) \)
+                                    using a <a href="assets/files/dantzig_et_al.pdf" target="_blank">linear-time median algorithm </a> <a class="scrollto" href="#ref-4">[4]</a> such that
+                                    \( F(\lambda) \) can be evaluated with \( O(n) \) comparisons.
 
 
                                     </p>
 
-                                  <p class="text-justify">
 
+                                  <p class="text-justify">
                                     <!--
                                     <b>Function Visualisation 2</b>
                                     <br> <br>
@@ -226,8 +228,6 @@
                                     \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \).
 
                                     -->
-
-
                                     <!-- Function Sliders -->
                                     <!-- <div class="container">
                                       <div class="row">
@@ -288,7 +288,6 @@
                                         </div>
                                       </div>
                                     </div> -->
-
                                     <!-- Function Visualisation -->
                                     <!-- <div class="container">
                                         <div class="row">
@@ -301,12 +300,6 @@
                                       <li> \( n\) can be chosen. </li>
                                       <li> Reset button for new draw. </li>
                                     </ul> -->
-
-                                    <br> <br>
-                                    Explain why:
-                                    <ul>
-                                      <li> \( F(\lambda) \) can be evaluated in (\ O(n) \) comparisons using quick median. </li>
-                                    </ul>
                                   </p>
 
 
@@ -377,6 +370,20 @@
                                             Megiddo, N. (1978, May).
                                             Combinatorial optimization with rational objective functions.
                                             In Proceedings of the tenth annual ACM symposium on Theory of computing (pp. 1-12). ACM.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="container" id="ref-4">
+                                    <div class="row">
+                                      <div class="col-1">
+                                        <p>[4]</p>
+                                      </div>
+                                      <div class="col-11">
+                                        <p class="text-justify">
+                                          Blum, M., Floyd, R. W., Pratt, V. R., Rivest, R. L., & Tarjan, R. E. (1973).
+                                          Time bounds for selection. J. Comput. Syst. Sci., 7(4), 448-461.
                                         </p>
                                       </div>
                                     </div>
