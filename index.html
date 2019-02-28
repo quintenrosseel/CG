@@ -114,8 +114,8 @@
                                     together with their corresponding \( F(\lambda) \) evaluated on \( \{f_{1}(\lambda), f_{2}(\lambda), f_{3}(\lambda) \} \).
 
                                     Notice that \( b_{i} \) is constrained to be positive
-                                    and that the intersections marked in black \( \lambda_{12}, \ \lambda_{13} \) and \( \lambda_{23} \) are critical points for \( F(\lambda) \).
-
+                                    and that the intersections marked in black \( \lambda_{12}, \ \lambda_{13} \) and \( \lambda_{23} \) are critical points for \( F(\lambda) \),
+                                    because only at these points, the evaluation of \( F(\lambda) \) might change.
 
                                     <br><br>
 
@@ -201,6 +201,16 @@
                                             </div>
                                         </div>
                                       </div>
+                                    <br><br>
+                                    It's easy to see now that \( F(\lambda) \) is a piecewise linear function that lies on the line
+                                    of the function that evaluates to the median for a particular \( \lambda \). As the \( {b_{i} \)'s are positive,
+                                    this means that each segment of the function is monotone-increasing. In piesewise linear functions,
+                                    the points where the slope of the function changes are known as breakpoints. Given that we know that a function
+                                    of \( n \) lines has
+                                    <a href="https://math.stackexchange.com/questions/270937/how-can-you-construct-as-many-intersections-as-possible-with-n-lines" target="_blank">
+                                      at most \( \frac{n^{2} - n }{2} \) intersections</a>, the upper bound for breakpoints is \( O(n^{2}) \).
+
+
                                     </p>
 
                                   <p class="text-justify">
@@ -294,8 +304,6 @@
                                     <br> <br>
                                     Explain why:
                                     <ul>
-                                      <li> \( F(\lambda) \) is a piecewise linear function. </li>
-                                      <li> \( F(\lambda) \) is a monotone increasing function with \( O(n^{2}) \) breakpoints. </li>
                                       <li> \( F(\lambda) \) can be evaluated in (\ O(n) \) comparisons using quick median. </li>
                                     </ul>
                                   </p>
