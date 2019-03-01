@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 600 238.7" style="enable-background:new 0 0 600 238.7;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;}
+	.st1{font-family:'TimesNewRomanPSMT';}
+	.st2{font-size:12px;}
+	.st3{font-size:8px;}
+	.st4{fill:#FFFFFF;}
+	.st5{fill:none;}
+</style>
+<g>
+	<g>
+		<g>
+			<g>
+				<g>
+					<polyline class="st0" points="78.5,128.9 78.5,65.9 103.2,65.9 					"/>
+					<g>
+						<polygon points="102.3,68.9 107.5,65.9 102.3,62.9 						"/>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<polyline class="st0" points="78.5,127.9 78.5,193.9 103.2,193.9 					"/>
+					<g>
+						<polygon points="102.3,196.9 107.5,193.9 102.3,190.9 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline class="st0" points="78.5,128.9 78.5,96.9 103.2,96.9 				"/>
+				<g>
+					<polygon points="102.3,99.9 107.5,96.9 102.3,93.9 					"/>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polyline class="st0" points="103.2,128.9 78.5,128.9 69.5,128.9 				"/>
+				<g>
+					<polygon points="102.3,125.9 107.5,128.9 102.3,131.9 					"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	<g>
+		<polyline class="st0" points="238.5,128.9 238.5,65.9 214.5,65.9 		"/>
+		<polyline class="st0" points="238.5,128.9 238.5,193.9 214.5,193.9 		"/>
+	</g>
+	<polyline class="st0" points="238.5,128.9 238.5,96.9 214.5,96.9 	"/>
+	<g>
+		<g>
+			<polyline class="st0" points="214.5,128.9 238.5,128.9 250.2,128.9 			"/>
+			<g>
+				<polygon points="249.3,131.9 254.5,128.9 249.3,125.9 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<rect x="113" y="54.9" width="96" height="21"/>
+		</g>
+		<g>
+			<rect x="113" y="86.9" width="96" height="21"/>
+		</g>
+		<g>
+			<rect x="113" y="118.9" width="96" height="21"/>
+		</g>
+		<g>
+			<rect x="113" y="181.9" width="96" height="21"/>
+		</g>
+		<text transform="matrix(6.123234e-17 1 -1 6.123234e-17 159.4209 155.51)" class="st1 st2">...</text>
+	</g>
+	<text transform="matrix(1 0 0 1 143.0039 42.4456)" class="st1 st3">Parallelism</text>
+	<circle cx="60.5" cy="128.9" r="3.5"/>
+	<circle cx="261.5" cy="128.9" r="3.5"/>
+	<text transform="matrix(1 0 0 1 146.7793 68.0598)" class="st4 st1 st3">Process 1</text>
+	<text transform="matrix(1 0 0 1 146.7793 100.0598)" class="st4 st1 st3">Process 2</text>
+	<text transform="matrix(1 0 0 1 145.7793 132.0598)" class="st4 st1 st3">Process 3</text>
+	<text transform="matrix(1 0 0 1 144.7793 195.0598)" class="st4 st1 st3">Process n</text>
+</g>
+<g>
+	<g>
+		<g>
+			<polyline class="st0" points="347.5,128.9 356.5,128.9 356.5,65.9 381.2,65.9 			"/>
+			<g>
+				<polygon points="380.3,68.9 385.5,65.9 380.3,62.9 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<path class="st5" d="M385.5,128.9"/>
+	</g>
+	<g>
+		<g>
+			<polyline class="st0" points="492.5,65.9 508.5,65.9 508.5,81.9 370.5,81.9 370.5,97.4 378.2,97.4 			"/>
+			<g>
+				<polygon points="377.3,100.4 382.5,97.4 377.3,94.4 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline class="st0" points="492.5,97.9 508.5,97.9 508.5,113.9 370.5,113.9 370.5,129.4 378.2,129.4 			"/>
+			<g>
+				<polygon points="377.3,132.4 382.5,129.4 377.3,126.4 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline class="st0" points="492.5,160.9 508.5,160.9 508.5,176.9 370.5,176.9 370.5,192.4 378.2,192.4 			"/>
+			<g>
+				<polygon points="377.3,195.4 382.5,192.4 377.3,189.4 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline class="st0" points="528.2,128.9 516.5,128.9 516.5,193.9 492.5,193.9 			"/>
+			<g>
+				<polygon points="527.3,125.9 532.5,128.9 527.3,131.9 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<rect x="391" y="54.9" width="96" height="21"/>
+		</g>
+		<g>
+			<rect x="391" y="86.9" width="96" height="21"/>
+		</g>
+		<g>
+			<rect x="391" y="118.9" width="96" height="21"/>
+		</g>
+		<g>
+			<rect x="391" y="181.9" width="96" height="21"/>
+		</g>
+		<text transform="matrix(6.123234e-17 1 -1 6.123234e-17 437.4209 155.51)" class="st1 st2">...</text>
+	</g>
+	<text transform="matrix(1 0 0 1 384.0352 42.4456)"><tspan x="0" y="0" class="st1 st3">Megiddo’s Par</tspan><tspan x="47.3" y="0" class="st1 st3">a</tspan><tspan x="51" y="0" class="st1 st3">llelism Simulation</tspan></text>
+	<circle cx="338.5" cy="128.9" r="3.5"/>
+	<circle cx="539.5" cy="128.9" r="3.5"/>
+	<text transform="matrix(1 0 0 1 424.7793 68.0598)" class="st4 st1 st3">Process 1</text>
+	<text transform="matrix(1 0 0 1 424.7793 100.0598)" class="st4 st1 st3">Process 2</text>
+	<text transform="matrix(1 0 0 1 423.7793 132.0598)" class="st4 st1 st3">Process 3</text>
+	<text transform="matrix(1 0 0 1 422.7793 195.0598)" class="st4 st1 st3">Process n</text>
+	<text transform="matrix(1 0 0 1 482.0671 161.1569)" class="st1 st2">...</text>
+</g>
+</svg>
