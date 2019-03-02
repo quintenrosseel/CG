@@ -249,21 +249,21 @@
                                       but is shown to benefit from parallel computation.
                                       Remember that we are looking for for two values \( \lambda^{1} \) and \( \lambda^{2} \), such that
                                       there are no other \( \lambda_{ij} \)'s in the open interval \( (\lambda^{1}, 0) \cup (0, \lambda^{2}) \).
-                                      When we have this interval, we can solve for the origin in a single step.
+                                      With this interval, we can solve for the origin in a single step.
                                       <br><br>
                                       Let \( \lambda^{*} \) be the unknown solution to \( F(\lambda^{*}) = 0 \). In order to evaluate \( F \) by
                                       a linear-time median algorithm, the value of \( \lambda \) needs to be known to compare each
                                       \( f_{i}(\lambda) \) and \( f_{j}(\lambda) \) in the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \). Nevertheless,
-                                      we know that only the intersection point \( \lambda_{ij} \)
-                                      really matters for the comparison of the median algorithm (it's a critical value): if \( \lambda \geq \lambda_{ij} \), then we know that
+                                      we know that only intersection points \( \lambda_{ij} \ | \ i \neq j \)
+                                      really matter for the comparison of the median algorithm (they are critical values): if \( \lambda \geq \lambda_{ij} \), then we know that
                                       \( f_{i} (\lambda) \geq f_{j}(\lambda) \) whereas for \( \lambda \leq \lambda_{ij} \) we know that
                                       \( f_{i} (\lambda) \leq f_{j}(\lambda) \), or vice versa.
                                       <br><br>
-                                      When we consider two functions \( f_{i} (\lambda) \) and \( f_{j} (\lambda) \), all we really need is the intersection
-                                      point \( \lambda_{ij} \) to compare \( F(\lambda_{ij}) \) and \(0\) to solve for \( F(\lambda^{*}) = 0 \). Because each
+                                      So when we consider two functions \( f_{i} (\lambda) \) and \( f_{j} (\lambda) \), all we really need is the intersection
+                                      point \( \lambda_{ij} \) to compare \( F(\lambda_{ij}) \) and \(0\) to solve for \( F(\lambda^{*}) = 0 \). As each
                                       function is monotone increasing, we know that if the sign
-                                      of \( F(\lambda_{ij}) \) is negative, that \( \lambda^{*} \geq \lambda_{ij} \) must hold and if the sign
-                                      is positive, then \( \lambda^{*} \leq \lambda_{ij} \) must hold.
+                                      of \( F(\lambda_{ij}) \) is negative, then \( \lambda^{*} \geq \lambda_{ij} \) and if the sign
+                                      is positive, then \( \lambda^{*} \leq \lambda_{ij} \).
                                       <br><br>
                                       The remark above suggests a parallel algorithm, as each intersection point \( \lambda_{ij} \) of two
                                       functions in the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) can be computed and compared independently
@@ -278,14 +278,14 @@
                                      of the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) in \( O(n^{2}) \) and
                                      compare the resulting critical points in \( O(n) \) that each may require a \( O(n) \)
                                      median finding to evaluate \( F \), leaving us with \( O(n^{2} + n^{2}) = O(n^{2}) \).
-                                     Can we do better with parallelism?
+                                     Let's see if we can do better with parallelism.
                                      <br><br>
                                      <b>Speeding Up with Parallelism</b>
                                      <br><br>
                                      Before making any claims about the parallel running time, it's important to note that Megiddo does not
-                                     account for overhead resulting from memory conflicts, memory syncronization and deadlocks that are typically
+                                     account for overhead resulting from memory conflicts, memory syncronization or deadlocks that are typically
                                      associated with parallelism. Rather, Megiddo simulates parallelism serially by running each independent process after one another.
-                                     This reduces the complexity (and running time) of his results.
+                                     This reduces the complexity (and arguably running time) of his results.
                                      <br><br>
                                      <img src="assets/images/simulation.svg" width="100%" height="auto">
                                      <br><br>
@@ -295,22 +295,24 @@
                                      As already mentioned, the intersection \( \lambda_{ij} \) of two functions \( f_{i} \) and \( f_{j} \)
                                      from the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) can be computed in \( O(1) \) such that one step in the simulated
                                      multiprocessor yields \( P \) critical values. As suggested in the explanation of the previous algorithm, these comparisons can
-                                     happen independently of each other. Without loss of generality, we can say that there exists a labeling such that the critical values
+                                     happen independently of each other.
+                                     <br><br>
+                                     Without loss of generality, we can say that there exists a labeling such that the critical values
                                      resulting from a multiprocessor step can be written as \( \lambda_{1} \leq \lambda_{2} \leq \dots \leq \lambda_{P}.\)
                                      Megiddo does not assume that these values are sorted in his running time analysis, but with a parallel sorting algorithm
-                                     like Valiant's <a class="scrollto" href="#ref-5">[5]</a> or Preparata's <a class="scrollto" href="#ref-6">[6]</a> a
-                                     sorting time of \( O(log(n)log(log(n)) \) can be achieved when \( P = n \).
+                                     like Valiant's <a class="scrollto" href="#ref-5">[5]</a> or Preparata's <a class="scrollto" href="#ref-6">[6]</a>, a
+                                     sorting time of \( T(n, P) = O(log(n)) \) or \( T(n, P) = O(log(n)log(log(n)) \) can be achieved when \( P = n \) and \( P = log(n) \) respectively.
                                      <br><br>
-                                     When the set of \( P \) critical values is sorted, an interval \( [\lambda_{i}, \lambda_{i+1}] \ | \ i \in [0, P] \) can be identified with
-                                     a \( O(log(P)) \) binary search, using a linear-time median algorithm to choose the pivot,
+                                     With the set of \( P \) critical values sorted, an interval \( [\lambda_{i}, \lambda_{i+1}] \ | \ i \in [0, P] \) can be identified with
+                                     a \( O(log(P)) \) binary search, using a linear-time median algorithm to pivot,
                                      such that \( \lambda_{i} \leq \lambda^{*} \leq \lambda_{i+1} \). In each step, we intersect the found interval with the
                                      interval of the previous step to get the smallest possible interval that satisfies \( \lambda_{i} \leq \lambda^{*} \leq \lambda_{i+1} \).
                                      This repeats \( T(n, P) \) times until an interval is found that does not intersect with the previous interval
-                                     and the median function crosses the zero level. Here, the equation can be solved in  \( O(1) \).
+                                     and the median function \( F \) crosses the zero level over the interval. Here, the equation can be solved in  \( O(1) \).
                                      <br><br>
                                      The running time of the algorithm presented above yields \( O(nlog(n)^{2}) \) for Preparata's scheme and
                                      \( O(nlog(n)^{2}log(log(n))) \) for Valiant's. Both bounds being superior to the previous \( O(n^{2}) \).
-                                     Now we have analysed this example in depth, we have the knowledge to tackle the minimum ratio cycle. 
+
                                     </p>
 
                                     <p class="text-justify">
@@ -411,6 +413,18 @@
 
 
                             </section><!--//doc-section-->
+                            <section id="mrc" class="doc-section">
+                                <h2 class="section-title">Minimum Ratio Cycle problem (MRC)</h2>
+                                <div class="section-block">
+                                  <p class="text-justify">
+                                      <ul>
+                                      </ul>
+                                      Explain the MRC problem, preferably visually or using an example.
+                                      Present how Megiddo proposes parametric search.
+
+                                  </p>
+                                </div>
+                            </section> <!--//doc-section-->
                             <section id="references" class="doc-section">
                                 <h2 class="section-title">References</h2>
                                 <div class="section-block">
@@ -507,6 +521,7 @@
 	                            <nav id="doc-menu" class="nav doc-menu flex-column sticky">
 	                                <a class="nav-link scrollto" href="#abstract">Abstract</a>
                                   <a class="nav-link scrollto" href="#preliminary">Megiddo's Preliminary Example</a>
+                                  <a class="nav-link scrollto" href="#mrc">Minimum Ratio Cycle (MRC)</a>
                                   <a class="nav-link scrollto" href="#references">References</a>
                                 <!--
 	                                <a class="nav-link scrollto" href="#installation-section">Head</a>
