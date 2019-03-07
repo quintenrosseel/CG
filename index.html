@@ -24,6 +24,10 @@
     <!-- JS for LaTeX formulae -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 
+    <!-- JS for graph visualisation. -->
+    <script src='assets/js/cytoscape.js' async></script>
+    <script src='assets/js/graph_vis.js' async></script>
+
     <!-- Global CSS -->
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <!-- Plugins CSS -->
@@ -69,6 +73,7 @@
                                     <br>
                                     <br>
                                     We start by (visually) exploring Meggido's preliminary example that demonstrates his general method, known as parametric search.
+                                    The technique is frequently used to solve optimization problems in computational geometry.
                                     The method uses a <i>decision algorithm</i>, <i>i.e.</i> an algorithm that checks if a given condition
                                     holds or not, to solve an <i>optimization problem</i>, <i>i.e.</i> an algorithm that determines an optimal solution for a problem.
                                     By cleverly running the decision problem as a concurrent process, Megiddo shows
@@ -417,13 +422,91 @@
                                 <h2 class="section-title">Minimum Ratio Cycle problem (MRC)</h2>
                                 <div class="section-block">
                                   <p class="text-justify">
-                                      <ul>
-                                      </ul>
-                                      Explain the MRC problem, preferably visually or using an example.
-                                      Present how Megiddo proposes parametric search.
+                                      The MRC problem was coined by <a href="assets/files/dantzig_et_al.pdf" target="_blank">Dantzig et al.</a>
+                                      <a class="scrollto" href="#ref-2">[2]</a> in the context of a ship routing problem posed by the
+                                      American Office of Naval Research. Practically, the problem concerns a ship owner that wants to <i>maximize</i> his total profit
+                                      over time while making a round trip through multiple ports. Dantzig et al. show that finding a cycle with <i>minimal</i> total edge-cost
+                                      over edge-time in a directed graph is a subproblem to solve the maximization problem.
+                                      <br><br>
+                                      More abstractly, each vertex \( i \) within a directed graph \( \mathcal{G} = (V, E)\),
+                                      with \(V\) a set of vertices and \(E\) a set of edges,
+                                      has an associated cost \( c_{ij} \) and travel time \( t_{ij} \) to reach a vertex \( j \).
+                                      Self-loops are not allowed in \( \mathcal{G} \).
+                                      <br><br>
+                                      The problem can be represented as an adjacency matrix \( A \in \{0, 1\}^{|V| \times |V|} \) determining the directed graph, a
+                                      cost matrix \( C \in \mathbb{R}^{|V| \times |V|} \) and a time matrix \( T \in \mathbb{R}^{|V| \times |V|} \).
+                                      If there is a directed edge from vertex \( i \) to \( j \), then \( A_{ij} = 1 \), if not then \( A_{ij} = 0 \).
+                                      As there are no self-loops in \( \mathcal{G} \), the diagonal elements of the matrix are always \( 0 \).
+                                      An interactive example of the setup is given below.
+                                      <br><br>
+                                      $$ A =
+                                      \begin{bmatrix}
+                                        0 & 1 & 0 & 0 & 0 \\
+                                        1 & 0 & 1 & 0 & 1 \\
+                                        0 & 0 & 0 & 1 & 0 \\
+                                        1 & 0 & 1 & 0 & 0 \\
+                                        1 & 1 & 0 & 0 & 0 \\
+                                      \end{bmatrix}\
+                                      C =
+                                      \begin{bmatrix}
+                                        0 & 8 & 0 & 0 & 0 \\
+                                        3 & 0 & 9 & 0 & 4 \\
+                                        0 & 0 & 0 & 7 & 0 \\
+                                        2 & 0 & 1 & 0 & 0 \\
+                                        6 & 11 & 0 & 0 & 0 \\
+                                      \end{bmatrix}\
+                                      T =
+                                      \begin{bmatrix}
+                                        0 & 3 & 0 & 0 & 0 \\
+                                        1 & 0 & 4 & 0 & 1 \\
+                                        0 & 0 & 0 & 2 & 0 \\
+                                        3 & 0 & 1 & 0 & 0 \\
+                                        2 & 9 & 0 & 0 & 0 \\
+                                      \end{bmatrix}\
 
+                                      $$
                                   </p>
                                 </div>
+                                <div id="graph-vis-1" class="full-width height-500">
+                                </div>
+
+                                <p class="text-justify">
+                                  <!--The first step is to define -->
+                                  To continue, we need to get this problem in a formulation that expresses the minimization.
+                                  Numerous combinatoral optimization problems can be formulated as linear minimization problems
+                                  subject to certain constraints. Megiddo highlights <a class="scrollto" href="#ref-3">[3]</a> two classes of problems
+                                  and an proves important relationship between them.
+                                  <br><br>
+                                  $$ \textbf{Problem A: } \ \text{Minimize } \ c_{1}x_{1} + \dots + c_{n}x_{n} \
+                                  \text{ such that } \ x = (x_{1}, \dots, x_{n}) \in D $$
+                                  $$ \textbf{Problem B: } \ \text{Minimize } \
+                                  \frac{a_{0} + a_{1}x_{1} + \dots + a_{n}x_{n}}{b_{0} + b_{1}x_{1} + \dots + b_{n}x_{n}} \
+                                  \text{ such that } \ x = (x_{1}, \dots, x_{n}) \in D $$
+
+                                  $$\text{With } \ D \ \text{ a set of conditions or constraints to which } \ x = (x_{1}, \dots, x_{n}) \\
+                                  \text{ must adhere in order to be a valid solution.} $$
+                                  <br><br>
+                                  Examples satisfying the definition of problem \( A \) are the shortest (simple) path, the
+                                  traveling salesman, the Chinese postman, the minimum spanning tree and various other scheduling problems.
+                                  Problem \( B \) is a generalization of problem \( A \) that contains MRC as a valid problem instance.
+                                  We can see that a matrix \( X \in \{0, 1\}^{|V| \times |V|} \) could encode the valid paths that
+                                  are available to take to determine what cost-time ratios are accounted for. Megiddo suggests that
+                                  \( D \) in this case is the set of all possible zero-one matrices \( X \) that encode a simple directed cycle.
+                                  An example of \( X \) based on the problem defined by adjacency matrix \( A \) is given below.
+                                  $$ X =
+                                  \begin{bmatrix}
+                                    0 & 1 & 0 & 0 & 0 \\
+                                    0 & 0 & 1 & 0 & 0 \\
+                                    0 & 0 & 0 & 1 & 0 \\
+                                    1 & 0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 0 & 0 \\
+                                  \end{bmatrix}\
+                                  $$
+                                  </p>
+                                  <div id="graph-vis-2" class="full-width height-500">
+                                  </div>
+
+
                             </section> <!--//doc-section-->
                             <section id="references" class="doc-section">
                                 <h2 class="section-title">References</h2>
