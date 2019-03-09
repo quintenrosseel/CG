@@ -310,7 +310,7 @@
                                      <br><br>
                                      With the set of \( P \) critical values sorted, an interval \( [\lambda_{i}, \lambda_{i+1}] \ | \ i \in [0, P] \) can be identified with
                                      a \( O(log(P)) \) binary search, using a linear-time median algorithm to pivot,
-                                     such that \( \lambda_{i} \leq \lambda^{*} \leq \lambda_{i+1} \). In each step, we intersect the found interval with the
+                                     such that \( \lambda_{i} \leq \lambda^{*} \leq \lambda_{i+1} \). In each step, we take an intersection between the found interval and the
                                      interval of the previous step to get the smallest possible interval that satisfies \( \lambda_{i} \leq \lambda^{*} \leq \lambda_{i+1} \).
                                      This repeats \( T(n, P) \) times until an interval is found that does not intersect with the previous interval
                                      and the median function \( F \) crosses the zero level over the interval. Here, the equation can be solved in  \( O(1) \).
@@ -428,6 +428,8 @@
                                       over time while making a round trip through multiple ports. Dantzig et al. show that finding a cycle with <i>minimal</i> total edge-cost
                                       over edge-time in a directed graph is a subproblem to solve the maximization problem.
                                       <br><br>
+                                      <b> Representation </b>
+                                      <br><br>
                                       More abstractly, each vertex \( i \) within a directed graph \( \mathcal{G} = (V, E)\),
                                       with \(V\) a set of vertices and \(E\) a set of edges,
                                       has an associated cost \( c_{ij} \) and travel time \( t_{ij} \) to reach a vertex \( j \).
@@ -472,40 +474,115 @@
 
                                 <p class="text-justify">
                                   <!--The first step is to define -->
+                                  <b> Megiddo's Theorem </b>
+                                  <br><br>
                                   To continue, we need to get this problem in a formulation that expresses the minimization.
                                   Numerous combinatoral optimization problems can be formulated as linear minimization problems
-                                  subject to certain constraints. Megiddo highlights <a class="scrollto" href="#ref-3">[3]</a> two classes of problems
-                                  and an proves important relationship between them.
+                                  subject to certain constraints. Megiddo highlights two classes of problems <a class="scrollto" href="#ref-3">[3]</a>
+                                  and proves an important relationship between them.
                                   <br><br>
-                                  $$ \textbf{Problem A: } \ \text{Minimize } \ c_{1}x_{1} + \dots + c_{n}x_{n} \
-                                  \text{ such that } \ x = (x_{1}, \dots, x_{n}) \in D $$
-                                  $$ \textbf{Problem B: } \ \text{Minimize } \
+                                  $$ \textbf{Problem A. } \ \text{Minimize } \ c_{1}x_{1} + \dots + c_{n}x_{n} \
+                                  \text{ subject to } \ x = (x_{1}, \dots, x_{n}) \in D $$
+                                  $$ \textbf{Problem B. } \ \text{Minimize } \
                                   \frac{a_{0} + a_{1}x_{1} + \dots + a_{n}x_{n}}{b_{0} + b_{1}x_{1} + \dots + b_{n}x_{n}} \
-                                  \text{ such that } \ x = (x_{1}, \dots, x_{n}) \in D $$
+                                  \text{ subject to } \ x = (x_{1}, \dots, x_{n}) \in D $$
 
                                   $$\text{With } \ D \ \text{ a set of conditions or constraints to which } \ x = (x_{1}, \dots, x_{n}) \\
                                   \text{ must adhere in order to be a valid solution.} $$
                                   <br><br>
                                   Examples satisfying the definition of problem \( A \) are the shortest (simple) path, the
                                   traveling salesman, the Chinese postman, the minimum spanning tree and various other scheduling problems.
-                                  Problem \( B \) is a generalization of problem \( A \) that contains MRC as a valid problem instance.
-                                  We can see that a matrix \( X \in \{0, 1\}^{|V| \times |V|} \) could encode the valid paths that
-                                  are available to take to determine what cost-time ratios are accounted for. Megiddo suggests that
-                                  \( D \) in this case is the set of all possible zero-one matrices \( X \) that encode a simple directed cycle.
-                                  An example of \( X \) based on the problem defined by adjacency matrix \( A \) is given below.
-                                  $$ X =
-                                  \begin{bmatrix}
-                                    0 & 1 & 0 & 0 & 0 \\
-                                    0 & 0 & 1 & 0 & 0 \\
-                                    0 & 0 & 0 & 1 & 0 \\
-                                    1 & 0 & 0 & 0 & 0 \\
-                                    0 & 0 & 0 & 0 & 0 \\
-                                  \end{bmatrix}\
-                                  $$
-                                  </p>
-                                  <div id="graph-vis-2" class="full-width height-500">
-                                  </div>
+                                  Problem \( B \) is a generalization of problem \( A \) that also includes MRC as a valid problem instance.
+                                  <br><br>
+                                    Before getting to any concrete algorithm for MRC, it is beneficial to look at a more general setting.
+                                    The goal is to relate problem \( A \) with problem \( B \), such that we can use algorithms for problem \( A \) to solve
+                                    problem instances of problem \( B \). Megiddo's main result goes as follows.
+                                    <br><br>
+                                    \(\textbf{Theorem. } \) If problem \(A\) is solvable within \(O(p(n))\) comparisons and \( O(q(n)) \)
+                                    additions, then problem \( B \) is solvable in time \( O(p(n)(q(n) + p(n)))\).
+                                    <br><br>
+                                    Megiddo starts by showcasing a standard trick to solve ratio minimization problems. Given a problem
+                                    \(B \), pick a fixed number \(t \in \mathbb{R} \) and solve problem \(A \) for
+                                    \( \{ c_{i}(t) = a_{i} - tb_{i} \ | \ i = 1, \dots, n \} \) under the same constraints \(D \).
+                                    <br><br>
+                                    Now suppose that \( v \) is an optimal value of problem \( A \) such that \( v = \min \big( (a_{1} - tb_{1})x_{1} + \dots + (a_{n} - tb_{n})x_{n} \big) \) with \( x \in D \).
+                                    If \( v \) can be written as \( v= tb_{0} - a_{0}\), then \( t \) must be the optimal value for problem \( B \), such that
+                                    \( t = \min \big( \frac{a_{0}}{b_{0}} + \frac{a_{1}}{b_{1}}x_{1} + \dots + \frac{a_{n}}{b_{n}}x_{n} \big) \), where each
+                                    \( \frac{a_{i}}{b_{i}}\) corresponds with a root of \( c_{i}(t) = a_{i} - tb_{i} \) such that \( c_{i}(\frac{a_{i}}{b_{i}}) = 0 \).
+                                    On the other hand, the solution \( x = (x_{1}, \dots, x_{n}) \in D \) of problem \( A \) is optimal with respect to \( t \)
+                                    because of our assumptions.
+                                    <br><br>
+                                    <!-- Note that \frac{a_{0}}{b_{0}} is a constant for the minimization! -->
+                                    In the case that \( v < tb_{0} - a_{0}\), a smaller \(t\) should be tested and if \( v > tb_{0} - a_{0}\),
+                                    a bigger \(t\) should be tested. Essentially, Megiddo proofs his theorem by parameterizing problem \( A \)
+                                    with a linear function \( c_{i}(t) \) for which the optimal \( t^{*} \) needs to be found. Finding \( t^{*} \) is done
+                                    by comparing each minimum value \(v(t) = \min \big( (a_{1} - tb_{1})x_{1} + \dots + (a_{n} - tb_{n})x_{n} \big) \) of problem \(A\) and gradually adjusting the interval \([e, f]\) that contains \( t^{*} \).
+                                    This parameterization and convergence to an interval in allow Megiddo to relate problem \( A \) with problem \( B \) and derive his theorem.
+                                    <br><br>
+                                    <b> Theoretical solution of MRC </b>
+                                    <br><br>
+                                    We are now ready to understand a practical example that uses this result to find a minimum ratio cycle.
+                                    We can see that a matrix \( X \in \{0, 1\}^{|V| \times |V|} \) could encode the valid paths that
+                                    are available to take, to determine what cost-time ratios are accounted for. Megiddo suggests that
+                                    \( D \) in this case is the set of all possible zero-one matrices \( X \) that encode a simple directed cycle.
+                                    An example of an \( X \in D \) based on the problem defined by adjacency matrix \( A \) is given below.
+                                    The numerator and denominator of problem \( B \) correspond with the previously discussed \( C \) and \( T \) matrix
+                                    respectively.
+                                    <br><br>
+                                    $$ A =
+                                    \begin{bmatrix}
+                                      0 & 1 & 0 & 0 & 0 \\
+                                      1 & 0 & 1 & 0 & 1 \\
+                                      0 & 0 & 0 & 1 & 0 \\
+                                      1 & 0 & 1 & 0 & 0 \\
+                                      1 & 1 & 0 & 0 & 0 \\
+                                    \end{bmatrix}
+                                    \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+                                    X =
+                                    \begin{bmatrix}
+                                      0 & 1 & 0 & 0 & 0 \\
+                                      0 & 0 & 1 & 0 & 0 \\
+                                      0 & 0 & 0 & 1 & 0 \\
+                                      1 & 0 & 0 & 0 & 0 \\
+                                      0 & 0 & 0 & 0 & 0 \\
+                                    \end{bmatrix}
+                                    $$
+                                    </p>
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <div id="graph-vis-3" class="full-width height-500">
+                                        </div>
+                                      </div>
+                                      <div class="col-6">
+                                        <div id="graph-vis-2" class="full-width height-500">
+                                        </div>
+                                      </div>
+                                    </div>
 
+                                    <p class="text-justify">
+                                      In order to apply an all-pair shortest path algorithm like Floyd-Warshall to this matrix,
+                                      we need to encode the cost-time ratios in the adjacency matrix, such that the problem becomes.
+                                      <br><br>
+                                      $$ X^{'} =
+                                      \begin{bmatrix}
+                                        0 & \frac{C_{0, 1}}{T_{0, 1}} & 0 & 0 & 0 \\
+                                        \frac{C_{1, 0}}{T_{1, 0}} & 0 & \frac{C_{1, 2}}{T_{1, 2}} & 0 & \frac{C_{1, 4}}{T_{1, 4}} \\
+                                        0 & 0 & 0 & \frac{C_{2, 3}}{T_{2, 3}} & 0 \\
+                                        \frac{C_{3, 0}}{T_{3, 0}} & 0 & \frac{C_{3, 2}}{T_{3, 2}} & 0 & 0 \\
+                                        \frac{C_{4, 0}}{T_{4, 0}} & \frac{C_{4, 1}}{T_{4, 1}} & 0 & 0 & 0 \\
+                                      \end{bmatrix}\
+                                      =
+                                      \begin{bmatrix}
+                                        0 & \frac{\Large 8}{\Large 3} & 0 & 0 & 0 \\
+                                        \frac{\Large 3}{\Large 1} & 0 & \frac{\Large 9}{\Large 4} & 0 & \frac{\Large 4}{\Large 1} \\
+                                        0 & 0 & 0 & \frac{\Large 7}{\Large 2} & 0 \\
+                                        \frac{\Large 2}{\Large 3} & 0 & \frac{\Large 1}{\Large 1} & 0 & 0 \\
+                                        \frac{\Large 6}{\Large 2} & \frac{\Large 11}{\Large 9} & 0 & 0 & 0 \\
+                                      \end{bmatrix}
+                                      $$
+
+
+                                    </p>
 
                             </section> <!--//doc-section-->
                             <section id="references" class="doc-section">

@@ -209,6 +209,48 @@ window.addEventListener('load', function () {
     }
   }); // Cytoscape
 
+  var cy3 = cytoscape({
+    container: document.getElementById('graph-vis-3'),
+    elements: matrices_to_cyt(A, C, T),
+    style: [ // the stylesheet for the graph
+      {
+        selector: 'node',
+        style: {
+          'background-color': '#666',
+          'label': 'data(id)',
+          "text-valign": "center",
+          "text-halign": "center",
+           "color": "#FFF",
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'curve-style': 'bezier',
+          'edge-text-rotation': 'autorotate',
+          'text-margin-y': -13,
+          'width': 2,
+          'line-color': '#ccc',
+          'label': 'data(label_text)',
+          "text-valign": "top",
+          'target-arrow-shape': 'triangle'
+        }
+      },
+      {
+        selector: ':active',
+        style: {
+          'overlay-opacity': 0
+        }
+      }
+    ],
+    layout: {
+      name: 'concentric',
+      fit: true,
+      padding: 40,
+      minNodeSpacing: 200,
+    }
+  }); // Cytoscape
+
   // Default options for every cytoscape graph.
   function setCyDefaults(cy) {
     cy.width(500);
@@ -222,6 +264,5 @@ window.addEventListener('load', function () {
     // Set default cytoscape options.
   setCyDefaults(cy1);
   setCyDefaults(cy2);
-
 
 }); // Page Load.
