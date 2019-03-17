@@ -16,6 +16,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.javascript pre {
+  background: #222;
+}
+
 html, body {
   height: 100%;
 }
@@ -41,7 +45,7 @@ html, body {
 }
 
 .height-500 {
-  height: 500px; 
+  height: 500px;
 }
 
 p {

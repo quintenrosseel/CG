@@ -2,7 +2,7 @@
 window.addEventListener('load', function () {
 
   // Adjacency matrix A
-  var A = [
+  const A = [
     [0, 1, 0, 0, 0],
     [1, 0, 1, 0, 1],
     [0, 0, 0, 1, 0],
@@ -11,7 +11,7 @@ window.addEventListener('load', function () {
   ];
 
   // Cost matrix C
-  var C = [
+  const C = [
     [0, 8, 0, 0, 0],
     [3, 0, 9, 0, 4],
     [0, 0, 0, 7, 0],
@@ -20,7 +20,7 @@ window.addEventListener('load', function () {
   ];
 
   // Time matrix T
-  var T = [
+  const T = [
     [0, 3, 0, 0, 0],
     [1, 0, 4, 0, 1],
     [0, 0, 0, 2, 0],
@@ -29,7 +29,7 @@ window.addEventListener('load', function () {
   ];
 
   // Example in visualisation 2.
-  var X_ex = [
+  const X_ex = [
     [0, 1, 0, 0, 0],
     [0, 0, 1, 0, 0],
     [0, 0, 0, 1, 0],
@@ -124,7 +124,7 @@ window.addEventListener('load', function () {
     return elements;
   }
 
-  var cy1 = cytoscape({
+  let cy1 = cytoscape({
     container: document.getElementById('graph-vis-1'),
     elements: matrices_to_cyt(A, C, T),
     style: [ // the stylesheet for the graph
@@ -167,7 +167,7 @@ window.addEventListener('load', function () {
     }
   });
 
-  var cy2 = cytoscape({
+  let cy2 = cytoscape({
     container: document.getElementById('graph-vis-2'),
     elements: matrices_to_cyt(X_ex, C, T),
     style: [ // the stylesheet for the graph
@@ -209,7 +209,7 @@ window.addEventListener('load', function () {
     }
   }); // Cytoscape
 
-  var cy3 = cytoscape({
+  let cy3 = cytoscape({
     container: document.getElementById('graph-vis-3'),
     elements: matrices_to_cyt(A, C, T),
     style: [ // the stylesheet for the graph
@@ -261,8 +261,21 @@ window.addEventListener('load', function () {
     cy.maxZoom(0.9);
   }
 
-    // Set default cytoscape options.
+  // Set default cytoscape options.
   setCyDefaults(cy1);
   setCyDefaults(cy2);
+
+  // Log shortest path with matrix.
+  const res = floyd_warshall(A, C, T);
+  const dp = res[0];
+  const next = res[1];
+  // console.log(dp);
+  // console.log("All shortest paths: ");
+  for(var i = 0; i < dp.length; i++) {
+    for(var j = 0; j < dp.length; j++) {
+      console.log("Shortest path from ", i, " to ", j, ": ",
+                  reconstruct_paths(i, j, dp, next));
+    }
+  }
 
 }); // Page Load.

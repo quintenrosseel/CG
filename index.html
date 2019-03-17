@@ -25,6 +25,7 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 
     <!-- JS for graph visualisation. -->
+    <script src='assets/js/mrc.js' async></script>
     <script src='assets/js/cytoscape.js' async></script>
     <script src='assets/js/graph_vis.js' async></script>
 
@@ -502,7 +503,7 @@
                                     additions, then problem \( B \) is solvable in time \( O(p(n)(q(n) + p(n)))\).
                                     <br><br>
                                     Megiddo starts by showcasing a standard trick to solve ratio minimization problems. Given a problem
-                                    \(B \), pick a fixed number \(t \in \mathbb{R} \) and solve problem \(A \) for
+                                    \(B \) with values for the coefficients, pick a fixed number \(t \in \mathbb{R} \) and solve problem \(A \) for
                                     \( \{ c_{i}(t) = a_{i} - tb_{i} \ | \ i = 1, \dots, n \} \) under the same constraints \(D \).
                                     <br><br>
                                     Now suppose that \( v \) is an optimal value of problem \( A \) such that \( v = \min \big( (a_{1} - tb_{1})x_{1} + \dots + (a_{n} - tb_{n})x_{n} \big) \) with \( x \in D \).
@@ -510,7 +511,7 @@
                                     \( t = \min \big( \frac{a_{0}}{b_{0}} + \frac{a_{1}}{b_{1}}x_{1} + \dots + \frac{a_{n}}{b_{n}}x_{n} \big) \), where each
                                     \( \frac{a_{i}}{b_{i}}\) corresponds with a root of \( c_{i}(t) = a_{i} - tb_{i} \) such that \( c_{i}(\frac{a_{i}}{b_{i}}) = 0 \).
                                     On the other hand, the solution \( x = (x_{1}, \dots, x_{n}) \in D \) of problem \( A \) is optimal with respect to \( t \)
-                                    because of our assumptions.
+                                    because of the assumptions.
                                     <br><br>
                                     <!-- Note that \frac{a_{0}}{b_{0}} is a constant for the minimization! -->
                                     In the case that \( v < tb_{0} - a_{0}\), a smaller \(t\) should be tested and if \( v > tb_{0} - a_{0}\),
@@ -519,7 +520,7 @@
                                     by comparing each minimum value \(v(t) = \min \big( (a_{1} - tb_{1})x_{1} + \dots + (a_{n} - tb_{n})x_{n} \big) \) of problem \(A\) and gradually adjusting the interval \([e, f]\) that contains \( t^{*} \).
                                     This parameterization and convergence to an interval in allow Megiddo to relate problem \( A \) with problem \( B \) and derive his theorem.
                                     <br><br>
-                                    <b> Theoretical solution of MRC </b>
+                                    <b> Solution of MRC &amp; Implementation</b>
                                     <br><br>
                                     We are now ready to understand a practical example that uses this result to find a minimum ratio cycle.
                                     We can see that a matrix \( X \in \{0, 1\}^{|V| \times |V|} \) could encode the valid paths that
@@ -560,29 +561,67 @@
                                     </div>
 
                                     <p class="text-justify">
-                                      In order to apply an all-pair shortest path algorithm like Floyd-Warshall to this matrix,
-                                      we need to encode the cost-time ratios in the adjacency matrix, such that the problem becomes.
+                                      The first step for an MRC-algorithm is to have a negative cycle detector. Megiddo uses
+                                      the Floyd-Warshall algorithm (FW) as a negative cycle detector by checking the resulting all-shortest-pairs matrix
+                                      for negative values. More background on using FW as a negative cycles detector can be found in
+                                      <a href="assets/files/floyd_warshall.pdf" target="_blank"> Hougard's paper </a>
+                                      <a class="scrollto" href="#ref-7">[7]</a>. Before we can apply Floyd-Warshall however,
+                                      we need to encode the cost-time ratios in our adjacency matrix like below. Aditionally,
+                                      we encode the absence of a path between two different nodes with \( \infty \).
+
                                       <br><br>
                                       $$ X^{'} =
                                       \begin{bmatrix}
-                                        0 & \frac{C_{0, 1}}{T_{0, 1}} & 0 & 0 & 0 \\
-                                        \frac{C_{1, 0}}{T_{1, 0}} & 0 & \frac{C_{1, 2}}{T_{1, 2}} & 0 & \frac{C_{1, 4}}{T_{1, 4}} \\
-                                        0 & 0 & 0 & \frac{C_{2, 3}}{T_{2, 3}} & 0 \\
-                                        \frac{C_{3, 0}}{T_{3, 0}} & 0 & \frac{C_{3, 2}}{T_{3, 2}} & 0 & 0 \\
-                                        \frac{C_{4, 0}}{T_{4, 0}} & \frac{C_{4, 1}}{T_{4, 1}} & 0 & 0 & 0 \\
+                                        0 & \frac{C_{0, 1}}{T_{0, 1}} & \infty & \infty & \infty \\
+                                        \frac{C_{1, 0}}{T_{1, 0}} & 0 & \frac{C_{1, 2}}{T_{1, 2}} & \infty & \frac{C_{1, 4}}{T_{1, 4}} \\
+                                        \infty & \infty & 0 & \frac{C_{2, 3}}{T_{2, 3}} & \infty \\
+                                        \frac{C_{3, 0}}{T_{3, 0}} & \infty & \frac{C_{3, 2}}{T_{3, 2}} & 0 & 0 \\
+                                        \frac{C_{4, 0}}{T_{4, 0}} & \frac{C_{4, 1}}{T_{4, 1}} & \infty & \infty & 0 \\
                                       \end{bmatrix}\
                                       =
                                       \begin{bmatrix}
-                                        0 & \frac{\Large 8}{\Large 3} & 0 & 0 & 0 \\
-                                        \frac{\Large 3}{\Large 1} & 0 & \frac{\Large 9}{\Large 4} & 0 & \frac{\Large 4}{\Large 1} \\
-                                        0 & 0 & 0 & \frac{\Large 7}{\Large 2} & 0 \\
-                                        \frac{\Large 2}{\Large 3} & 0 & \frac{\Large 1}{\Large 1} & 0 & 0 \\
-                                        \frac{\Large 6}{\Large 2} & \frac{\Large 11}{\Large 9} & 0 & 0 & 0 \\
+                                        0 & \frac{\Large 8}{\Large 3} & \infty & \infty & \infty \\
+                                        \frac{\Large 3}{\Large 1} & 0 & \frac{\Large 9}{\Large 4} & \infty & \frac{\Large 4}{\Large 1} \\
+                                        \infty & \infty & 0 & \frac{\Large 7}{\Large 2} & \infty \\
+                                        \frac{\Large 2}{\Large 3} & 0 & \frac{\Large 1}{\Large 1} & 0 & \infty \\
+                                        \frac{\Large 6}{\Large 2} & \frac{\Large 11}{\Large 9} & \infty & \infty & 0 \\
                                       \end{bmatrix}
                                       $$
+                                      </p>
+
+                                      <div class="section-block javascript">
+                                          <div class="code-block">
+                                              <h6>Floyd-Warshall Algorithm </h6>
+                                              The basic idea of the Floyd-Warshall algorithm comes from the observation that
+                                              an edge \( e_{ij} \) is the shortest path from vertex \(i\) to \(j\) if and only if there is no other route
+                                              \( \{e_{ik},e_{kj} \} \) such that
+                                              \( \delta(e_{ij}) > \delta(e_{ik}) + \delta(e_{jk}) \) with \(\delta(x) \) a
+                                              distance function of choice. The basic idea is demonstrated below. The input of the algorithm
+                                              \( m \) corresponds with the matrix \( X^{'} \) from above.
+                                              <br><br>
+                                              FW can be used as a negative cycles detector by running it again, and checking if the values
+                                              remain the same for each element in the matrix. If they do not, then there is a negative cycle in the graph,
+                                              otherwise, there are no negative cycles.
+
+                                              <pre><code class="language-javascript">
+      function basic_floyd_warshall(m) {
+        for(var k = 0; k < n; k++) {
+          for(var i = 0; i < n; i++) {
+            for(var j = 0; j < n; j++) {
+              if(m[i][k] + m[k][j] < m[i][j]) {
+                m[i][j] = m[i][k] + m[k][j]; // Detour is shorter
+              }
+            }
+          }
+        }
+      }
+                                          </code></pre>
+                                          </div><!--//code-block-->
+
+                                          <p class="text-justify"> (Insert algorithm solution here!) </p>
+                                      </div><!--//section-block-->
 
 
-                                    </p>
 
                             </section> <!--//doc-section-->
                             <section id="references" class="doc-section">
@@ -672,6 +711,18 @@
                                     </div>
                                   </div>
 
+                                  <div class="container" id="ref-7">
+                                    <div class="row">
+                                      <div class="col-1">
+                                        <p>[7]</p>
+                                      </div>
+                                      <div class="col-11">
+                                        <p class="text-justify">
+                                        Hougardy, Stefan. (2010). The Floyd-Warshall algorithm on graphs with negative cycles. Inf. Process. Lett.. 110. 279-281. 10.1016/j.ipl.2010.02.001.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                             </section><!--//doc-section-->
                         </div><!--//content-inner-->
