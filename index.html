@@ -575,7 +575,7 @@
                                         0 & \frac{C_{0, 1}}{T_{0, 1}} & \infty & \infty & \infty \\
                                         \frac{C_{1, 0}}{T_{1, 0}} & 0 & \frac{C_{1, 2}}{T_{1, 2}} & \infty & \frac{C_{1, 4}}{T_{1, 4}} \\
                                         \infty & \infty & 0 & \frac{C_{2, 3}}{T_{2, 3}} & \infty \\
-                                        \frac{C_{3, 0}}{T_{3, 0}} & \infty & \frac{C_{3, 2}}{T_{3, 2}} & 0 & 0 \\
+                                        \frac{C_{3, 0}}{T_{3, 0}} & \infty & \frac{C_{3, 2}}{T_{3, 2}} & 0 & \infty \\
                                         \frac{C_{4, 0}}{T_{4, 0}} & \frac{C_{4, 1}}{T_{4, 1}} & \infty & \infty & 0 \\
                                       \end{bmatrix}\
                                       =
@@ -583,7 +583,7 @@
                                         0 & \frac{\Large 8}{\Large 3} & \infty & \infty & \infty \\
                                         \frac{\Large 3}{\Large 1} & 0 & \frac{\Large 9}{\Large 4} & \infty & \frac{\Large 4}{\Large 1} \\
                                         \infty & \infty & 0 & \frac{\Large 7}{\Large 2} & \infty \\
-                                        \frac{\Large 2}{\Large 3} & 0 & \frac{\Large 1}{\Large 1} & 0 & \infty \\
+                                        \frac{\Large 2}{\Large 3} & \infty & \frac{\Large 1}{\Large 1} & 0 & \infty \\
                                         \frac{\Large 6}{\Large 2} & \frac{\Large 11}{\Large 9} & \infty & \infty & 0 \\
                                       \end{bmatrix}
                                       $$
@@ -599,7 +599,7 @@
                                               distance function of choice. The basic idea is demonstrated below. The input of the algorithm
                                               \( m \) corresponds with the matrix \( X^{'} \) from above.
                                               <br><br>
-                                              FW can be used as a negative cycles detector by running it again, and checking if the values
+                                              FW can be used as a negative cycle detector by running it again, and checking if the values
                                               remain the same for each element in the matrix. If they do not, then there is a negative cycle in the graph,
                                               otherwise, there are no negative cycles.
 
@@ -618,7 +618,12 @@
                                           </code></pre>
                                           </div><!--//code-block-->
 
-                                          <p class="text-justify"> (Insert algorithm solution here!) </p>
+                                          <p class="text-justify">
+                                            Now, let \( u_{ij}^{(m)}(t)\) be the length of a shortest simple path from \(i \) to  \(j \),
+                                            only using nodes from the set \( \{1 \dots m-1 \} \) and using a 
+                                            distance function \( c_{ij}(t) = a_{ij} - tb_{ij} \).
+
+                                          </p>
                                       </div><!--//section-block-->
 
 

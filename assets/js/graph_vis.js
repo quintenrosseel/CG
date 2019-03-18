@@ -10,6 +10,14 @@ window.addEventListener('load', function () {
     [1, 1, 0, 0, 0],
   ];
 
+  const Test = [
+    [0, 1, 0, 0, 0],
+    [1, 0, 1, 0, 1],
+    [0, 0, 0, 1, 0],
+    [1, 0, 1, 0, 0],
+    [1, 1, 0, 0, 0],
+  ];
+
   // Cost matrix C
   const C = [
     [0, 8, 0, 0, 0],
@@ -266,16 +274,21 @@ window.addEventListener('load', function () {
   setCyDefaults(cy2);
 
   // Log shortest path with matrix.
-  const res = floyd_warshall(A, C, T);
-  const dp = res[0];
-  const next = res[1];
-  // console.log(dp);
+  // const res = floyd_warshall(A, C, T);
+  // const dp = res[0];
+  // const next = res[1];
+  // console.log("DP: ", dp);
   // console.log("All shortest paths: ");
-  for(var i = 0; i < dp.length; i++) {
-    for(var j = 0; j < dp.length; j++) {
-      console.log("Shortest path from ", i, " to ", j, ": ",
-                  reconstruct_paths(i, j, dp, next));
-    }
-  }
+  // for(var i = 0; i < dp.length; i++) {
+  //   for(var j = 0; j < dp.length; j++) {
+  //     console.log("Shortest path from ", i, " to ", j, ": ",
+  //                 reconstruct_path(i, j, dp, next));
+  //   }
+  // }
+
+  //
+  f = parameterize(Test, C, T, 4);
+  f(0, 3, 0);
+
 
 }); // Page Load.
