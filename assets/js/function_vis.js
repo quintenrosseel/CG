@@ -1,9 +1,25 @@
+// Global vars.
+class Point {
+  constructor(x, y) {
+      this.x = x;
+      this.y = y;
+  }
+
+  translateX(Tx) {
+    return this.x + Tx;
+  }
+
+  translateY(Ty) {
+    return this.y + Ty;
+  }
+}
 var canvasWidth = 600;
 var canvasHeight = 400;
 var transX = canvasWidth*0.5;
 var transY = canvasHeight*0.5;
 var coordScale = 50;
 var val = 0;
+var origin = new Point(0,0);
 
 // Get element by class.
 function getElementsByClassName(node,classname) {
@@ -45,21 +61,6 @@ function median(values){
     return (values[half - 1] + values[half]) / 2.0;
 }
 
-class Point {
-  constructor(x, y) {
-      this.x = x;
-      this.y = y;
-  }
-
-  translateX(Tx) {
-    return this.x + Tx;
-  }
-
-  translateY(Ty) {
-    return this.y + Ty;
-  }
-}
-
 // Direction coeff.
 function getDirCoef(p1, p2) {
     return (p2.y - p1.y)/(p2.x - p1.x);
@@ -95,6 +96,38 @@ function megiddo_f_intersect(a_1, b_1, a_2, b_2) {
     var f_y = megiddo_f(a_1, b_1, lambda);
 
     return (new Point(lambda, f_y));
+  } else {
+    return null;
+  }
+}
+
+function slope(p1, p2) {
+  let slope;
+  if((p2.x - p1.x) != 0) {
+    slope = (p2.y - p1.y)/(p2.x - p1.x);
+  } else {
+    slope = 0;
+  }
+  return slope;
+}
+
+function linear_f(p1, p2) {
+  return function (x) {
+    const m = slope(p1, p2);
+    return (m * x) - (m * p1.x) + p1.y;
+  }
+}
+
+function linear_intersection(f1_p1, f1_p2, f2_p1, f2_p2) {
+  const m1 = slope(f1_p1, f1_p2);
+  const f1 = linear_f(f1_p1, f1_p2);
+  const m2 = slope(f2_p1, f2_p2);
+
+  // Check if there is a difference in slope. (No infinity number of solutions)
+  if((m1 - m2) != 0) {
+    const x = (-m2 * f2_p1.x + m1 * f1_p1.x - f1_p1.y + f2_p1.y)/(m1 - m2);
+    const y = f1(x);
+    return (new Point(x, y));
   } else {
     return null;
   }
@@ -141,9 +174,9 @@ function plot_megiddo_F(sketch, min_range, max_range, set) {
   }
 }
 
-
-// Initialise origin.
-var origin = new Point(0,0);
+function isInfinity(number) {
+  return (number == Infinity) || (number == -Infinity);
+}
 
 // Show instances on screen
 window.addEventListener('load', function () {
@@ -157,6 +190,14 @@ window.addEventListener('load', function () {
     var b_1 = Number(document.getElementById('b_1_slider_1').value);
     var b_2 = Number(document.getElementById('b_2_slider_1').value);
     var b_3 = Number(document.getElementById('b_3_slider_1').value);
+
+    let graph_a_1_label_i = document.getElementById('a_1_slider_1_label_i');
+    let graph_a_2_label_i = document.getElementById('a_2_slider_1_label_i');
+    let graph_a_3_label_i = document.getElementById('a_3_slider_1_label_i');
+    let graph_b_1_label_i = document.getElementById('b_1_slider_1_label_i');
+    let graph_b_2_label_i = document.getElementById('b_2_slider_1_label_i');
+    let graph_b_3_label_i = document.getElementById('b_3_slider_1_label_i');
+
     var functionSet = new Array(3);
 
     // Fill functionSet
@@ -175,16 +216,22 @@ window.addEventListener('load', function () {
         var srcVal = Number(e.srcElement.value);
         if(srcId == "a_1_slider_1") {
           a_1 = srcVal - 10;
+          graph_a_1_label_i.innerHTML = String(srcVal - 10);
         } else if (srcId == "a_2_slider_1"){
           a_2 = srcVal - 10;
+          graph_a_2_label_i.innerHTML = String(srcVal - 10);
         } else if (srcId == "a_3_slider_1"){
           a_3 = srcVal - 10;
+          graph_a_3_label_i.innerHTML = String(srcVal - 10);
         } else if (srcId == "b_1_slider_1") {
           b_1 = srcVal;
+          graph_b_1_label_i.innerHTML = String(srcVal);
         } else if (srcId == "b_2_slider_1") {
           b_2 = srcVal;
+          graph_b_2_label_i.innerHTML = String(srcVal);
         } else if (srcId == "b_3_slider_1") {
           b_3 = srcVal;
+          graph_b_3_label_i.innerHTML = String(srcVal);
         }
 
         // Refill function set upon change.
@@ -257,64 +304,133 @@ window.addEventListener('load', function () {
     };
   };
 
+  // Matrices for function plot.
+  // Example for visualisation 4.
+  const A_4 = [
+    [0, 1, 1, 1],
+    [1, 0, 1, 1],
+    [1, 1, 0, 1],
+    [1, 1, 1, 0],
+  ];
+  const C_4 = [
+    [0, 1, 11, 4],
+    [4, 0, 5, 7],
+    [9, 4, 0, 3],
+    [8, 9, 2, 0],
+  ];
+  const T_4 = [
+    [0, 3, 5, 2],
+    [8, 0, 1, 6],
+    [3, 9, 0, 5],
+    [3, 7, 1, 0],
+  ];
+
   // Second function visualisation canvas.
-  /*
   var vis_2 = function(sketch) {
+    const stepsize = 4;
+    const minrange = -80;
+    const maxrange = 80;
+    const elements = getElementsByClassName(document, "range-2"); // All range elements for this vis.
 
-    // Initialise slider values
-    var a_min = Number(document.getElementById('a_1_slider_2').value - 10);
-    var a_max = Number(document.getElementById('a_2_slider_2').value - 10);
-    var b_min = Number(document.getElementById('b_1_slider_2').value);
-    var b_max = Number(document.getElementById('b_2_slider_2').value);
-    var n = document.getElementById('n_slider_2').value;
+    // Get slider values & Store Label ids.
+    let graph_i = Number(document.getElementById('i_slider_2').value);
+    let graph_j = Number(document.getElementById('j_slider_2').value);
+    let graph_m = Number(document.getElementById('m_slider_2').value);
+    let graph_i_label_i = document.getElementById('i_slider_2_label_i');
+    let graph_j_label_i = document.getElementById('j_slider_2_label_i');
+    let graph_m_label_i = document.getElementById('m_slider_2_label_i');
 
-    var functionSet = new Array(n);
+    // Remove edges that should not be considered by parameterization.
+    const A_4_ij = remove_edges_from_m(A_4, graph_m, graph_i, graph_j);
+    const A_4_im = remove_edges_from_m(A_4, graph_m, graph_i, graph_m);
+    const A_4_mj = remove_edges_from_m(A_4, graph_m, graph_m, graph_j);
 
-    // Calculate the set for F.
-    function calculateFunctions() {
-        for (var i = 0; i < n; i++) {
-          var a = randFloatBetween(a_min, a_max);
-          var b = randFloatBetween(b_min, b_max);
-          functionSet[i] = get_megiddo_f(a, b);
-        }
-    }
+    /*
+    console.log("A_4", A_4);
+    console.log("ij", clone_array(A_4_ij));
+    console.log("im", clone_array(A_4_im));
+    console.log("mj", clone_array(A_4_mj));
+  */
 
-    // Initialise set for F
-    calculateFunctions();
+    // Parameterize without cycle detection, i.e. APSP.
+    const f_ij = parameterize(A_4_ij, C_4, T_4, false);
+    const f_im = parameterize(A_4_im, C_4, T_4, false);
+    const f_mj = parameterize(A_4_mj, C_4, T_4, false);
 
-    // Add event handlers for when slider values change.
-    var elements = getElementsByClassName(document, "range-2"), n = elements.length;
+    // Construct arrays to plot functions.
+    let f_ij_values = calculate_f_values(f_ij, graph_i, graph_j);
+    let f_im_values = calculate_f_values(f_im, graph_i, graph_m);
+    let f_mj_values = calculate_f_values(f_mj, graph_m, graph_j);
+    let f_rhs_values = f_im_values.map(function(el, i) {
+      return el + f_mj_values[i];
+    });
 
-    for (var i = 0; i < n; i++) {
+    // Attach event listener to all range sliders to update functions.
+    for (var i = 0; i < elements.length; i++) {
       var e = elements[i];
-      e.addEventListener("mouseup", function(e){
+      e.addEventListener("mouseup", function(e) {
         var srcId = e.srcElement.id;
         var srcVal = Number(e.srcElement.value);
-
-        if(srcId == "a_1_slider_2") {
-          a_min = srcVal - 10;
-        } else if (srcId == "a_2_slider_2"){
-          a_max = srcVal - 10;
-        } else if (srcId == "b_1_slider_2") {
-          b_min = srcVal;
-        } else if (srcId == "b_2_slider_2") {
-          b_max = srcVal;
-        } else if (srcId == "n_slider_2") {
-          n = srcVal;
+        if(srcId == "i_slider_2") {
+          graph_i = srcVal;
+          graph_i_label_i.innerHTML = String(srcVal);
+        } else if (srcId == "j_slider_2"){
+          graph_j = srcVal;
+          graph_j_label_i.innerHTML = String(srcVal);
+        } else if (srcId == "m_slider_2") {
+          graph_m = srcVal;
+          graph_m_label_i.innerHTML = String(srcVal);
         }
-        console.log(a_min, a_max, b_min, b_max, n );
-        calculateFunctions();
+        // Recalculate function values.
+        f_ij_values = calculate_f_values(f_ij, graph_i, graph_j);
+        f_im_values = calculate_f_values(f_im, graph_i, graph_m);
+        f_mj_values = calculate_f_values(f_mj, graph_m, graph_j);
+        f_rhs_values = f_im_values.map(function(el, i) {
+          return el + f_mj_values[i];
+        });
+
+        // console.log("i (" + String(graph_i)+") to j (" + String(graph_j) + "): ", f_ij_values,
+        //             "i (" + String(graph_i)+") to m (" + String(graph_m) + "): ", f_im_values,
+        //             "m (" + String(graph_m)+") to j (" + String(graph_j) + "): ", f_mj_values,
+        //             "Sum of rhs (im, mj)", f_rhs_values);
       });
+    }
+
+    function calculate_f_values(f, start_vertex, end_vertex) {
+      const steps = (maxrange - minrange)/stepsize;
+      let f_values = new Array(steps);
+      let step = 0;
+
+      // Calculate the f values.
+      for(var t = minrange; t < maxrange; t = t + stepsize) {
+        // Returns array of [dp, next]
+        let apsp_matrix = f(t)[0];
+        f_values[step] = apsp_matrix[start_vertex][end_vertex];
+        step++;
+      }
+      return f_values;
+    }
+
+    function plot_f(values) {
+      let step = 0;
+      for(var t = minrange; t < (maxrange-1); t = t + stepsize) {
+        if(!isInfinity(values[step]) && !isInfinity(values[step + 1]) &&
+        !(values[step] == undefined) && !(values[step + 1] == undefined)) {
+          sketch.line(t,
+                      values[step],
+                      (t+stepsize),
+                      values[step+1]);
+        }
+        step++;
+      }
     }
 
     sketch.setup = function() {
       sketch.createCanvas(canvasWidth, canvasHeight);
-      sketch.frameRate(0.5);
+      sketch.frameRate(1);
     };
-
     sketch.draw = function() {
-
-      localScale = 1;
+      localScale = 2;
       var canvas = document.getElementById('defaultCanvas1');
       var context = canvas.getContext('2d');
 
@@ -326,23 +442,78 @@ window.addEventListener('load', function () {
       context.scale(1 * localScale, -1 * localScale);
 
       // Draw Axis
-      sketch.strokeWeight(0.5);
+      sketch.strokeWeight(0.25);
       sketch.noFill();
       sketch.stroke(120,120,120);
       sketch.line(origin.x, canvasHeight/2, origin.x, -canvasHeight/2); // Y axis
       sketch.line(-canvasWidth/2, origin.y, canvasWidth/2, origin.y); // X axis
 
       // Plot functions
-      sketch.strokeWeight(0.5);
+      sketch.strokeWeight(0.75);
       sketch.stroke(247,123,107);
 
-      plot_megiddo_F(sketch, -400, 400, functionSet);
+      // Plot function here. (draw sketch lines)
+      plot_f(f_ij_values);
+
+      sketch.stroke(0,0,255);
+
+      // Plot function here. (draw sketch lines)
+      plot_f(f_im_values);
+      plot_f(f_mj_values);
+
+      sketch.stroke(200,200,0);
+      plot_f(f_rhs_values);
+
+
+      const f1_p1_min = new Point(minrange, f_ij_values[0]);
+      const f1_p2_min = new Point(minrange + stepsize, f_ij_values[1]);
+      const f2_p1_min = new Point(minrange, f_rhs_values[0]);
+      const f2_p2_min = new Point(minrange + stepsize, f_rhs_values[1]);
+
+      const f1_p1_max = new Point(maxrange - stepsize,
+                                  f_ij_values[f_ij_values.length - 2]);
+
+      const f1_p2_max = new Point(maxrange,
+                                  f_ij_values[f_ij_values.length - 1]);
+
+      const f2_p1_max = new Point(maxrange - 2 * stepsize,
+                                  f_rhs_values[f_rhs_values.length - 2]);
+
+      const f2_p2_max = new Point(maxrange - stepsize,
+                                  f_rhs_values[f_rhs_values.length - 1]);
+
+      const intersection1 = linear_intersection(f1_p1_min,
+                                                f1_p2_min,
+                                                f2_p1_min,
+                                                f2_p2_min);
+
+      const intersection2 = linear_intersection(f1_p1_max,
+                                                f1_p2_max,
+                                                f2_p1_max,
+                                                f2_p2_max);
+
+      if(intersection1 && intersection1.x < 0) {
+        //console.log(intersection1);
+        sketch.fill(20);
+        sketch.noStroke();
+        sketch.ellipse(intersection1.x, intersection1.y, 2, 2)
+      }
+
+      if(intersection2 && intersection2.x > 0) {
+        //console.log(intersection2);
+        sketch.fill(20);
+        sketch.noStroke();
+        sketch.ellipse(intersection2.x, intersection2.y, 2, 2)
+      }
+
     };
   };
-  */
+
+  // Call the beast.
+  console.log("The minimum ratio cycle is: ", mrc(A_4, C_4, T_4));
 
   // Attach sketches to DOM.
   var myp5_1 = new p5(vis_1, document.getElementById('func-vis-1'));
-  // var myp5_2 = new p5(vis_2, document.getElementById('func-vis-2'));
+  var myp5_2 = new p5(vis_2, document.getElementById('func-vis-2'));
 
 }, false);

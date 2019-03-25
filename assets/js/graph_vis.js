@@ -45,6 +45,28 @@ window.addEventListener('load', function () {
     [0, 0, 0, 0, 0],
   ];
 
+  // Example for visualisation 4.
+  const A_4 = [
+    [0, 1, 1, 1],
+    [1, 0, 1, 1],
+    [1, 1, 0, 1],
+    [1, 1, 1, 0],
+  ];
+
+  const C_4 = [
+    [0, 1, 11, 4],
+    [4, 0, 5, 7],
+    [9, 4, 0, 3],
+    [8, 9, 2, 0],
+  ];
+
+  const T_4 = [
+    [0, 3, 5, 2],
+    [8, 0, 1, 6],
+    [3, 9, 0, 5],
+    [3, 7, 1, 0],
+  ];
+
   // Check if node has no incoming / outgoing nodes.
   // Returns sorted list of nodes that are lonely.
   function check_lonely_nodes(M) {
@@ -215,7 +237,7 @@ window.addEventListener('load', function () {
       padding: 40,
       minNodeSpacing: 200,
     }
-  }); // Cytoscape
+  });
 
   let cy3 = cytoscape({
     container: document.getElementById('graph-vis-3'),
@@ -257,7 +279,347 @@ window.addEventListener('load', function () {
       padding: 40,
       minNodeSpacing: 200,
     }
-  }); // Cytoscape
+  });
+
+  let cy4= cytoscape({
+    container: document.getElementById('graph-vis-4'),
+    // elements: matrices_to_cyt(A_4, C_4, create_square_ones_matrix(C_4.length)),
+    style: [ // the stylesheet for the graph
+      {
+        selector: 'node',
+        style: {
+          'background-color': '#666',
+          'label': 'data(id)',
+          "text-valign": "center",
+          "text-halign": "center",
+           "color": "#FFF",
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'curve-style': 'bezier',
+          'edge-text-rotation': 'autorotate',
+          'text-margin-y': -11,
+          'width': 2,
+          'line-color': '#ccc',
+          'label': 'data(label_text)',
+          "text-valign": "top",
+          'target-arrow-shape': 'triangle'
+        }
+      },
+      {
+        selector: ':active',
+        style: {
+          'overlay-opacity': 0
+        }
+      }
+    ],
+    elements: [
+      {
+        "data": {
+          "id": "0"
+        },
+        "position": {
+          "x": 250.71428571428564,
+          "y": 255.93686889852268
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "1"
+        },
+        "position": {
+          "x": 480.4917025300487,
+          "y": 108.57142857142851
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "2"
+        },
+        "position": {
+          "x": 252.14285714285722,
+          "y": 494.0631311014774
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "3"
+        },
+        "position": {
+          "x": 25.222583184236907,
+          "y": 105.7142857142857
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": true,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "01",
+          "source": "0",
+          "target": "1",
+          "label_text": "1/3 = 0.33"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        style: {
+          'line-color': '#0000FF',
+          'target-arrow-color': '#0000FF',
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": "",
+      },
+      {
+        "data": {
+          "id": "02",
+          "source": "0",
+          "target": "2",
+          "label_text": "11/5 = 2.2"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "03",
+          "source": "0",
+          "target": "3",
+          "label_text": "4/2 = 2"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "10",
+          "source": "1",
+          "target": "0",
+          "label_text": "4/8 = 0.5"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        style: {
+          'line-color': '#0000FF',
+          'target-arrow-color': '#0000FF',
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": "",
+      },
+      {
+        "data": {
+          "id": "12",
+          "source": "1",
+          "target": "2",
+          "label_text": "5/1 = 5"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "13",
+          "source": "1",
+          "target": "3",
+          "label_text": "7/6 = 1.17"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "20",
+          "source": "2",
+          "target": "0",
+          "label_text": "9/3 = 3"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "21",
+          "source": "2",
+          "target": "1",
+          "label_text": "4/9 = 0.44"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "23",
+          "source": "2",
+          "target": "3",
+          "label_text": "3/5 = 0.6"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "30",
+          "source": "3",
+          "target": "0",
+          "label_text": "8/3 = 2.67"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "31",
+          "source": "3",
+          "target": "1",
+          "label_text": "9/7 = 1.29"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "32",
+          "source": "3",
+          "target": "2",
+          "label_text": "2/1 = 2"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "classes": ""}],
+    layout: {
+      name: 'preset'
+    }
+  });
+
 
   // Default options for every cytoscape graph.
   function setCyDefaults(cy) {
@@ -272,23 +634,13 @@ window.addEventListener('load', function () {
   // Set default cytoscape options.
   setCyDefaults(cy1);
   setCyDefaults(cy2);
+  setCyDefaults(cy4);
 
-  // Log shortest path with matrix.
-  // const res = floyd_warshall(A, C, T);
-  // const dp = res[0];
-  // const next = res[1];
-  // console.log("DP: ", dp);
-  // console.log("All shortest paths: ");
-  // for(var i = 0; i < dp.length; i++) {
-  //   for(var j = 0; j < dp.length; j++) {
-  //     console.log("Shortest path from ", i, " to ", j, ": ",
-  //                 reconstruct_path(i, j, dp, next));
-  //   }
-  // }
 
-  //
-  f = parameterize(Test, C, T, 4);
-  f(0, 3, 0);
+  //f = parameterize(Test, C, T);
 
+  // window.addEventListener("click", function() {
+  //   console.log(cy4.json(true).elements);
+  // });
 
 }); // Page Load.

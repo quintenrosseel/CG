@@ -14,20 +14,22 @@
     <!-- p5 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
 
+    <!-- MRC Code (needed by function vis)-->
+    <script src='assets/js/mrc.js' async></script>
+
     <!-- Javacsript for function visualisation. -->
     <script src= "assets/js/function_vis.js"></script>
     <script src= "assets/js/p5.dom.js"></script>
+
+    <!-- JS for graph visualisation. -->
+    <script src='assets/js/cytoscape.js' async></script>
+    <script src='assets/js/graph_vis.js' async></script>
 
     <!-- FontAwesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
 
     <!-- JS for LaTeX formulae -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
-
-    <!-- JS for graph visualisation. -->
-    <script src='assets/js/mrc.js' async></script>
-    <script src='assets/js/cytoscape.js' async></script>
-    <script src='assets/js/graph_vis.js' async></script>
 
     <!-- Global CSS -->
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -129,7 +131,10 @@
                                     <div class="container">
                                       <div class="row">
                                           <div class="col-4 text-center">
-                                            <label for="a_1_slider_1">\( a_{1} \)</label>
+                                            <label for="a_1_slider_1">
+                                              \( a_{1} = \)
+                                              <i id="a_1_slider_1_label_i">2</i>
+                                            </label>
                                             <div class="d-flex justify-content-center my-4">
                                                <span class="font-weight-bold indigo-text mr-2 mt-1">-10</span>
                                                 <form class="range-field w-75">
@@ -140,7 +145,10 @@
                                          </div>
 
                                            <div class="col-4 text-center">
-                                             <label for="a_2_slider_1">\( a_{2} \)</label>
+                                             <label for="a_2_slider_1">
+                                               \( a_{2} = \)
+                                                <i id="a_2_slider_1_label_i">10</i>
+                                             </label>
                                              <div class="d-flex justify-content-center my-4">
                                                 <span class="font-weight-bold indigo-text mr-2 mt-1">-10</span>
                                                    <form class="range-field w-75">
@@ -151,7 +159,10 @@
                                            </div>
 
                                            <div class="col-4 text-center">
-                                             <label for="a_3_slider_1">\( a_{3} \)</label>
+                                             <label for="a_3_slider_1">
+                                               \( a_{3} = \)
+                                               <i id="a_3_slider_1_label_i">-10</i>
+                                             </label>
                                              <div class="d-flex justify-content-center my-4 text-center">
                                                 <span class="font-weight-bold indigo-text mr-2 mt-1">-10</span>
                                                    <form class="range-field w-75">
@@ -163,7 +174,10 @@
                                       </div>
                                         <div class="row">
                                           <div class="col-4 text-center">
-                                            <label for="b_1_slider_1">\( b_{1} \)</label>
+                                            <label for="b_1_slider_1">
+                                              \( b_{1} = \)
+                                              <i id="b_1_slider_1_label_i">0</i>
+                                            </label>
                                             <div class="d-flex justify-content-center my-4">
                                                <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
                                                 <form class="range-field w-75">
@@ -175,7 +189,10 @@
 
 
                                           <div class="col-4 text-center">
-                                            <label for="b_2_slider_1">\( b_{2} \)</label>
+                                            <label for="b_2_slider_1">
+                                              \( b_{2} = \)
+                                              <i id="b_2_slider_1_label_i">4</i>
+                                            </label>
                                             <div class="d-flex justify-content-center my-4">
                                                <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
                                                   <form class="range-field w-75">
@@ -186,7 +203,10 @@
                                           </div>
 
                                           <div class="col-4 text-center">
-                                            <label for="b_3_slider_1">\( b_{3} \)</label>
+                                            <label for="b_3_slider_1">
+                                              \( b_{3} = \)
+                                              <i id="b_3_slider_1_label_i">9</i>
+                                            </label>
                                             <div class="d-flex justify-content-center my-4 text-center">
                                                <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
                                                   <form class="range-field w-75">
@@ -206,7 +226,7 @@
                                             <div class="col-12 text-center" id="func-vis-1">
                                             </div>
                                         </div>
-                                      </div>
+                                    </div>
                                     <br><br>
                                     <p class="text-justify">
                                       It's easy to see now that \( F(\lambda) \) is a piecewise linear function that lies on the line
@@ -425,9 +445,11 @@
                                   <p class="text-justify">
                                       The MRC problem was coined by <a href="assets/files/dantzig_et_al.pdf" target="_blank">Dantzig et al.</a>
                                       <a class="scrollto" href="#ref-2">[2]</a> in the context of a ship routing problem posed by the
-                                      American Office of Naval Research. Practically, the problem concerns a ship owner that wants to <i>maximize</i> his total profit
-                                      over time while making a round trip through multiple ports. Dantzig et al. show that finding a cycle with <i>minimal</i> total edge-cost
-                                      over edge-time in a directed graph is a subproblem to solve the maximization problem.
+                                      American Office of Naval Research. Practically, the problem concerns a ship owner that wants to <i>maximize</i> his mean daily profit
+                                      over time while making a round trip through multiple ports.
+                                      The solution to the problem gives exactly the path that the skipper should take to maximize his profit.
+                                      As these kinds of problems are usually posed in a minimization setting, the problem can be transformed to minimize the negative profit over time ratio,
+                                      which is exactly the MRC problem.
                                       <br><br>
                                       <b> Representation </b>
                                       <br><br>
@@ -493,7 +515,7 @@
                                   <br><br>
                                   Examples satisfying the definition of problem \( A \) are the shortest (simple) path, the
                                   traveling salesman, the Chinese postman, the minimum spanning tree and various other scheduling problems.
-                                  Problem \( B \) is a generalization of problem \( A \) that also includes MRC as a valid problem instance.
+                                  Notice that problem \( B \) is a generalization of problem \( A \) that also includes MRC as a valid problem instance.
                                   <br><br>
                                     Before getting to any concrete algorithm for MRC, it is beneficial to look at a more general setting.
                                     The goal is to relate problem \( A \) with problem \( B \), such that we can use algorithms for problem \( A \) to solve
@@ -508,8 +530,7 @@
                                     <br><br>
                                     Now suppose that \( v \) is an optimal value of problem \( A \) such that \( v = \min \big( (a_{1} - tb_{1})x_{1} + \dots + (a_{n} - tb_{n})x_{n} \big) \) with \( x \in D \).
                                     If \( v \) can be written as \( v= tb_{0} - a_{0}\), then \( t \) must be the optimal value for problem \( B \), such that
-                                    \( t = \min \big( \frac{a_{0}}{b_{0}} + \frac{a_{1}}{b_{1}}x_{1} + \dots + \frac{a_{n}}{b_{n}}x_{n} \big) \), where each
-                                    \( \frac{a_{i}}{b_{i}}\) corresponds with a root of \( c_{i}(t) = a_{i} - tb_{i} \) such that \( c_{i}(\frac{a_{i}}{b_{i}}) = 0 \).
+                                    \( t = \min \big( \frac{a_{0}}{b_{0}} + \frac{a_{1}}{b_{1}}x_{1} + \dots + \frac{a_{n}}{b_{n}}x_{n} \big) \).
                                     On the other hand, the solution \( x = (x_{1}, \dots, x_{n}) \in D \) of problem \( A \) is optimal with respect to \( t \)
                                     because of the assumptions.
                                     <br><br>
@@ -520,7 +541,7 @@
                                     by comparing each minimum value \(v(t) = \min \big( (a_{1} - tb_{1})x_{1} + \dots + (a_{n} - tb_{n})x_{n} \big) \) of problem \(A\) and gradually adjusting the interval \([e, f]\) that contains \( t^{*} \).
                                     This parameterization and convergence to an interval in allow Megiddo to relate problem \( A \) with problem \( B \) and derive his theorem.
                                     <br><br>
-                                    <b> Solution of MRC &amp; Implementation</b>
+                                    <b> Preparing the MRC Implementation</b>
                                     <br><br>
                                     We are now ready to understand a practical example that uses this result to find a minimum ratio cycle.
                                     We can see that a matrix \( X \in \{0, 1\}^{|V| \times |V|} \) could encode the valid paths that
@@ -561,48 +582,64 @@
                                     </div>
 
                                     <p class="text-justify">
-                                      The first step for an MRC-algorithm is to have a negative cycle detector. Megiddo uses
-                                      the Floyd-Warshall algorithm (FW) as a negative cycle detector by checking the resulting all-shortest-pairs matrix
-                                      for negative values. More background on using FW as a negative cycles detector can be found in
+                                      The first step towards a MRC solution is an algorithm that finds the shortest simple
+                                      cycle, <i>i.e.</i> no repetition of vertices and edges, in a directed graph where
+                                      each edge has an associated distance \( c_{ij}\) that may take a negative value.
+                                      This setting can be formulated as a minimization problem for the sum \( \sum{c_{ij}x_{ij}} \) such that it becomes a valid instance
+                                      of the problem \( A \) class that we discussed earlier. Additionally, allowance of negative distance values requires negative cycle
+                                      detection to stop the algorithm from running forever.
+                                      <br><br>
+                                      The Floyd-Warshall algorithm (FW), originally solving the all-pairs-shortest-path problem (APSP),
+                                      can be turned into a shortest simple cycle finder and
+                                      can also detect negative cycles by running it again, and checking if the values
+                                      remain the same for each element in the APSP matrix. If they do not, then there is a negative cycle in the graph,
+                                      otherwise, there are no negative cycles. More background on using FW for negative cycle detection can be found in
                                       <a href="assets/files/floyd_warshall.pdf" target="_blank"> Hougard's paper </a>
-                                      <a class="scrollto" href="#ref-7">[7]</a>. Before we can apply Floyd-Warshall however,
-                                      we need to encode the cost-time ratios in our adjacency matrix like below. Aditionally,
-                                      we encode the absence of a path between two different nodes with \( \infty \).
+                                      <a class="scrollto" href="#ref-7">[7]</a>.
+                                      <br><br>
+                                      Before we can apply Floyd-Warshall as a (negative) cycle detector,
+                                      we need to encode the cost-time ratios in our adjacency matrix. Aditionally,
+                                      we encode the absence of a path between two nodes with \( \infty \).
+                                      Note that the difference between Floyd-Warshall as a solution to the APSP problem and
+                                      the cycle detection problem is quite subtle. To apply it as a APSP,
+                                      the diagonal elements are encoded with \( 0 \).
+                                      To use FW as a simple cycle detector, the elements on
+                                      the diagonal are encoded with \( \infty \).
 
                                       <br><br>
                                       $$ X^{'} =
                                       \begin{bmatrix}
-                                        0 & \frac{C_{0, 1}}{T_{0, 1}} & \infty & \infty & \infty \\
-                                        \frac{C_{1, 0}}{T_{1, 0}} & 0 & \frac{C_{1, 2}}{T_{1, 2}} & \infty & \frac{C_{1, 4}}{T_{1, 4}} \\
-                                        \infty & \infty & 0 & \frac{C_{2, 3}}{T_{2, 3}} & \infty \\
-                                        \frac{C_{3, 0}}{T_{3, 0}} & \infty & \frac{C_{3, 2}}{T_{3, 2}} & 0 & \infty \\
-                                        \frac{C_{4, 0}}{T_{4, 0}} & \frac{C_{4, 1}}{T_{4, 1}} & \infty & \infty & 0 \\
+                                        \infty & \frac{C_{0, 1}}{T_{0, 1}} & \infty & \infty & \infty \\
+                                        \frac{C_{1, 0}}{T_{1, 0}} & \infty & \frac{C_{1, 2}}{T_{1, 2}} & \infty & \frac{C_{1, 4}}{T_{1, 4}} \\
+                                        \infty & \infty & \infty & \frac{C_{2, 3}}{T_{2, 3}} & \infty \\
+                                        \frac{C_{3, 0}}{T_{3, 0}} & \infty & \frac{C_{3, 2}}{T_{3, 2}} & \infty & \infty \\
+                                        \frac{C_{4, 0}}{T_{4, 0}} & \frac{C_{4, 1}}{T_{4, 1}} & \infty & \infty & \infty \\
                                       \end{bmatrix}\
                                       =
                                       \begin{bmatrix}
-                                        0 & \frac{\Large 8}{\Large 3} & \infty & \infty & \infty \\
-                                        \frac{\Large 3}{\Large 1} & 0 & \frac{\Large 9}{\Large 4} & \infty & \frac{\Large 4}{\Large 1} \\
-                                        \infty & \infty & 0 & \frac{\Large 7}{\Large 2} & \infty \\
-                                        \frac{\Large 2}{\Large 3} & \infty & \frac{\Large 1}{\Large 1} & 0 & \infty \\
-                                        \frac{\Large 6}{\Large 2} & \frac{\Large 11}{\Large 9} & \infty & \infty & 0 \\
+                                        \infty & \frac{\Large 8}{\Large 3} & \infty & \infty & \infty \\
+                                        \frac{\Large 3}{\Large 1} & \infty & \frac{\Large 9}{\Large 4} & \infty & \frac{\Large 4}{\Large 1} \\
+                                        \infty & \infty & \infty & \frac{\Large 7}{\Large 2} & \infty \\
+                                        \frac{\Large 2}{\Large 3} & \infty & \frac{\Large 1}{\Large 1} & \infty & \infty \\
+                                        \frac{\Large 6}{\Large 2} & \frac{\Large 11}{\Large 9} & \infty & \infty & \infty \\
                                       \end{bmatrix}
                                       $$
                                       </p>
 
                                       <div class="section-block javascript">
                                           <div class="code-block">
-                                              <h6>Floyd-Warshall Algorithm </h6>
+                                              <h6>Floyd-Warshall Algorithm as APSP </h6>
+                                              <p class="text-justify">
                                               The basic idea of the Floyd-Warshall algorithm comes from the observation that
                                               an edge \( e_{ij} \) is the shortest path from vertex \(i\) to \(j\) if and only if there is no other route
                                               \( \{e_{ik},e_{kj} \} \) such that
                                               \( \delta(e_{ij}) > \delta(e_{ik}) + \delta(e_{jk}) \) with \(\delta(x) \) a
-                                              distance function of choice. The basic idea is demonstrated below. The input of the algorithm
-                                              \( m \) corresponds with the matrix \( X^{'} \) from above.
+                                              distance function of choice. The input \( m \) of the FW algorithm
+                                               corresponds with the matrix \( X^{'} \) from above. Note that the resulting matrix only gives
+                                              the shortest distance between two nodes and that reconstructing a shortest path requires an additional
+                                              2-dimensional matrix that keeps track of the shortest subsequent node for a given target node.
                                               <br><br>
-                                              FW can be used as a negative cycle detector by running it again, and checking if the values
-                                              remain the same for each element in the matrix. If they do not, then there is a negative cycle in the graph,
-                                              otherwise, there are no negative cycles.
-
+                                              </p>
                                               <pre><code class="language-javascript">
       function basic_floyd_warshall(m) {
         for(var k = 0; k < n; k++) {
@@ -619,11 +656,133 @@
                                           </div><!--//code-block-->
 
                                           <p class="text-justify">
-                                            Now, let \( u_{ij}^{(m)}(t)\) be the length of a shortest simple path from \(i \) to  \(j \),
-                                            only using nodes from the set \( \{1 \dots m-1 \} \) and using a 
-                                            distance function \( c_{ij}(t) = a_{ij} - tb_{ij} \).
+                                            Now, let \( u_{ij}^{(m)}(t)\) be the length of a shortest simple path from \(i \) to \(j \),
+                                            only using nodes from the set \( \{1 \dots m-1 \} \cup \{i, j\} \) and using a
+                                            distance function \( c_{ij}(t) = a_{ij} - tb_{ij} \), the parameterization
+                                            that is core element for algorithm \( B \). In our implementation, this is represented as a
+                                            function \( f(i, j, t, m) \) that is returned from a call to the function \(parameterize(A, C, T)\), where
+                                            \(A\) is an adjacency matrix, \(C\) is a cost matrix and \(T\) a time matrix for the given problem.
+                                            <br><br>
+                                            With the \(t\)-parameterized function, the first step is to find a \( t' \in [e,f] \) such that
+                                            \( u_{ij}^{(m)}(t) = u_{im}^{(m)}(t) + u_{mj}^{(m)}(t)\). An interactive example for the parameterization of the
+                                            \( A \) algorithm for a fully connected
+                                            \( K_{4} \) graph, where the minimum ratio cycle is colored in blue, and its corresponding \( u_{ij}^{(m)}(t),\ u_{im}^{(m)}(t),\ u_{mj}^{(m)}(t) \)
+                                            and \( u_{im}^{(m)}(t) + u_{mj}^{(m)}(t) \) functions is given below.
 
                                           </p>
+
+                                          <div class="row">
+                                            <div class="col-12">
+                                              <div id="graph-vis-4" class="full-width height-500">
+                                              </div>
+                                            </div>
+                                          </div>
+
+
+                                          <!-- Function Sliders -->
+                                            <div class="row">
+                                                <div class="col-4 text-center">
+                                                  <label for="i_slider_2">\(i = \)
+                                                    <i id="i_slider_2_label_i">2</i>
+                                                  </label>
+                                                  <div class="d-flex justify-content-center my-4">
+                                                     <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                                                      <form class="range-field w-75">
+                                                       <input value="2" class="custom-range range-2" type="range" step="1" min="0" max="3" id="i_slider_2" />
+                                                      </form>
+                                                   <span class="font-weight-bold indigo-text ml-2 mt-1">3</span>
+                                                 </div>
+                                               </div>
+
+                                                 <div class="col-4 text-center">
+                                                   <label for="j_slider_2">\( j = \)
+                                                    <i id="j_slider_2_label_i">2</i>
+                                                   </label>
+                                                   <div class="d-flex justify-content-center my-4">
+                                                      <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                                                         <form class="range-field w-75">
+                                                          <input value="2" class="custom-range range-2" type="range" step="1" min="0" max="3" id="j_slider_2" />
+                                                         </form>
+                                                     <span class="font-weight-bold indigo-text ml-2 mt-1">3</span>
+                                                   </div>
+                                                 </div>
+
+                                                 <div class="col-4 text-center">
+                                                   <label for="m_slider_2">
+                                                     \( m = \)
+                                                       <i id="m_slider_2_label_i">1</i>
+                                                   </label>
+                                                   <div class="d-flex justify-content-center my-4 text-center">
+                                                      <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                                                         <form class="range-field w-75">
+                                                          <input value="1"
+                                                           class="custom-range range-2" type="range" step="1" min="0" max="3" id="m_slider_2" />
+                                                         </form>
+                                                     <span class="font-weight-bold indigo-text ml-2 mt-1">3</span>
+                                                   </div>
+                                                 </div>
+                                            </div>
+                                            <br><br>
+                                            <!-- Function Visualisation -->
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-12 text-center" id="func-vis-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br><br>
+                                            <p class="text-justify">
+                                              In the visualisation above, the red line represents \( u_{ij}^{(m)}(t) \), the blue lines represent
+                                              \( u_{im}^{(m)}(t), u_{mj}^{(m)}(t) \) and the green line represents \( u_{im}^{(m)}(t) + u_{mj}^{(m)}(t) \).
+                                              When \( t = 0\), a clear nod can be observed in all functions due to the sign change that transforms the distance functions
+                                              from \( c_{ij}(t) = a_{ij} - tb_{ij} \ \) to \(\  c_{ij}(t) = a_{ij} + tb_{ij} \). Another obvious observation is that
+                                              all functions are linear over \( (-\infty, 0) \) and \( (0, \infty) \) and that the value \( t' \) for which
+                                              \( u_{ij}^{(m)}(t') = u_{im}^{(m)}(t') + u_{mj}^{(m)}(t')\) is the intersection of the red and yellow line, marked with a black point.
+                                              <br><br>
+                                              In a similar way as the first example, we use the function \( c_{ij}(t) \) to guide the search and refine the solution interval.
+                                              <ol class="text-justify" start="-1">
+                                                <li>Intialise the search interval \([e, f]\) to \([-\infty, \infty]\) and set \( i = j = m = 0 \)
+                                                    where \( i \) and \( j \) are constrained such that \( 1 \leq i \leq j \leq n \), with \(n\) the total number of vertices in the graph.
+                                                </li>
+                                                <li>
+                                                  Solve for \( t \) in \( u_{ij}^{(m)}(t) = u_{im}^{(m)}(t) + u_{mj}^{(m)}(t)\):
+                                                </li>
+                                                <ul class="text-justify">
+                                                  <li>If \( u_{ij}^{(m)}(t) - u_{im}^{(m)}(t) - u_{mj}^{(m)}(t) = 0\) has a <i> unique solution </i> \( t' \), then
+                                                   go to the next step. </li>
+                                                  <li>If \( u_{ij}^{(m)}(t) - u_{im}^{(m)}(t) - u_{mj}^{(m)}(t) = 0\) has <i> multiple solutions </i>, go to step <b> 4</b>.
+                                                  </li>
+                                                </ul>
+                                                <li>
+                                                  Check if the graph with distances \( c_{kl}(t') = a_{kl} - t'b_{kl}\)
+                                                  has negative cycles and / or zero cycles.
+                                                </li>
+                                                <ul class="text-justify">
+                                                  <li>If there is a zero cycle and no negative cycle, then terminate with the zero cycle as minimum ratio cycle.</li>
+                                                  <li>If there is a negative cycle, then update the upperbound \( f \) of the search interval to \( t' \).</li>
+                                                  <li>If all cycles are positive, then update the lowerbound \( e \) of the search interval to \( t' \). </li>
+                                                </ul>
+                                                <li>
+                                                  Set \( u_{ij}^{(m+1)}(t) = \min( u_{ij}^{(m)}(t), u_{im}^{(m)}(t) + u_{mj}^{(m)}(t)) \)
+                                                </li>
+                                                <li>
+                                                  Update parameters such that:
+                                                </li>
+                                                <ul class="text-justify">
+                                                  <li>If \( j < n \), update \( j \leftarrow j + 1 \) and go back to step <b> 1</b>. </li>
+                                                  <li>If \( j = n \) and \( i < n \), update \( i \leftarrow i + 1 \) and go back to step <b> 1</b>. </li>
+                                                  <li>If \( i = j = n \) and \( m < n \), update \( i \leftarrow 1, j \leftarrow 1, m \leftarrow m + 1 \)
+                                                    and go back to step <b> 1</b>. </li>
+                                                  <li>If \( i = j = n \) and \( m = n \), then go to step <b> 5</b>. </li>
+                                                </ul>
+                                                <li>
+                                                  Find a \( k\) such that \( u_{kk}^{n+1}(k) < 0\). The minimum ratio cycle is the shortest simple cycle with respect
+                                                  to the distance metric \( c_{ij}(f)\) that contains \( k \).
+                                                </li>
+                                              </ol>
+                                            </p>
+
+
                                       </div><!--//section-block-->
 
 
