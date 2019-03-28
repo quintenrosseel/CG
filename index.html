@@ -92,9 +92,11 @@
                                     <br>
                                     Finally, we present an attempt at an implementation of the parameterization method for the
                                     MRC, inspired on <a href="assets/files/megiddo_earlier.pdf" target="_blank">Megiddo's earlier work</a>
-                                    <a class="scrollto" href="#ref-3">[3]</a> and using
+                                    <a class="scrollto" href="#ref-3">[3]</a> and conclude with some remarks and outlooks. 
+<!--
+                                    and using
                                     <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API" target="_blank">Mozilla’s Web Worker API</a> for
-                                    concurrent javascript programming.
+                                    concurrent javascript programming. -->
 
                                   </p>
                                 </div>
@@ -311,7 +313,7 @@
                                      Before making any claims about the parallel running time, it's important to note that Megiddo does not
                                      account for overhead resulting from memory conflicts, memory syncronization or deadlocks that are typically
                                      associated with parallelism. Rather, Megiddo simulates parallelism serially by running each independent process after one another.
-                                     This reduces the complexity (and arguably running time) of his results.
+                                     This reduces the complexity of his analysis and results.
                                      <br><br>
                                      <img src="assets/images/simulation.svg" width="100%" height="auto">
                                      <br><br>
@@ -735,20 +737,21 @@
                                               In the visualisation above, the red line represents \( u_{ij}^{(m)}(t) \), the blue lines represent
                                               \( u_{im}^{(m)}(t), u_{mj}^{(m)}(t) \) and the green line represents \( u_{im}^{(m)}(t) + u_{mj}^{(m)}(t) \).
                                               When \( t = 0\), a clear nod can be observed in all functions due to the sign change that transforms the distance functions
-                                              from \( c_{ij}(t) = a_{ij} - tb_{ij} \ \) to \(\  c_{ij}(t) = a_{ij} + tb_{ij} \). Another obvious observation is that
-                                              all functions are linear over \( (-\infty, 0) \) and \( (0, \infty) \) and that the value \( t' \) for which
+                                              from \( c_{ij}(t) = a_{ij} - tb_{ij} \ \) to \(\  c_{ij}(t) = a_{ij} + tb_{ij} \). This causes the shortest path with respect to \(c_{ij}(t) \),
+                                              <i>i.e.</i> the minimum path distance value, to jump to the smallest, most negative path. As Megiddo does not cover how this should be handled in his paper,
+                                              we assume this to be correct. Another obvious observation is all functions are linear over \( (-\infty, 0) \) and \( (0, \infty) \) and that the value \( t' \) for which
                                               \( u_{ij}^{(m)}(t') = u_{im}^{(m)}(t') + u_{mj}^{(m)}(t')\) is the intersection of the red and yellow line, marked with a black point.
                                               <br><br>
                                               In a similar way as the first example, we use the function \( c_{ij}(t) \) to guide the search and refine the solution interval.
-                                              <ol class="text-justify" start="-1">
+                                              <ol class="text-justify custom-list" start="-1">
                                                 <li>Intialise the search interval \([e, f]\) to \([-\infty, \infty]\) and set \( i = j = m = 0 \)
-                                                    where \( i \) and \( j \) are constrained such that \( 1 \leq i \leq j \leq n \), with \(n\) the total number of vertices in the graph.
+                                                    where \( i \) and \( j \) are constrained such that \( 0 \leq i \leq j \leq n \), with \(n\) the total number of vertices in the graph.
                                                 </li>
                                                 <li>
                                                   Solve for \( t \) in \( u_{ij}^{(m)}(t) = u_{im}^{(m)}(t) + u_{mj}^{(m)}(t)\):
                                                 </li>
                                                 <ul class="text-justify">
-                                                  <li>If \( u_{ij}^{(m)}(t) - u_{im}^{(m)}(t) - u_{mj}^{(m)}(t) = 0\) has a <i> unique solution </i> \( t' \), then
+                                                  <li>If \( u_{ij}^{(m)}(t) - u_{im}^{(m)}(t) - u_{mj}^{(m)}(t) = 0\) has a <i> unique solution </i> \( t' \in [e, f]\), then
                                                    go to the next step. </li>
                                                   <li>If \( u_{ij}^{(m)}(t) - u_{im}^{(m)}(t) - u_{mj}^{(m)}(t) = 0\) has <i> multiple solutions </i>, go to step <b> 4</b>.
                                                   </li>
@@ -781,13 +784,71 @@
                                                 </li>
                                               </ol>
                                             </p>
-
-
+                                            <p class="text-justify">
+                                              Our attempt at the implementation of a parametric MRC algorithm can be found
+                                              <a href="./assets/js/mrc.js" target="_blank"> here </a> and is made available
+                                              as a global function that can be run in the browser console, as below.
+                                              \( A_4 \) represents the adjacency matrix, \( C_4 \) the cost matrix and \( T_4 \) the time matrix.
+                                            </p>
+                                            <pre><code class="language-javascript">
+    // Open browser console and run.
+    mrc(A_4, C_4, T_4);
+                                        </code></pre>
+                                        <br>
+                                        <p class="text-justify">
+                                          We note however that this implementation is not fully waterproof due to unclarity in the algorithm specification.
+                                          For example, we do not know what should be done in the case that the upper bound of the search interval \( f \), remains \( \infty \).
+                                          This can be the case when no single unique solution \( t' \) gives rise to a negative cycle during the execution of the MRC algorithm in step <b>3</b>.
+                                          <br><br>
+                                          As the final step (<b>5</b>) consists of evaluating \(u_{kk}^{(n+1)}(f)\), it is crucial for \( f \) to evaluate to an evaluable value, different from
+                                          \( \infty \). Nevertheless, we can still proceed to discuss the parametric properties of the algorithm.
+                                          <br><br>
+                                          <b> MRC Parameterization</b>
+                                          <br><br>
+                                          We are now ready to see that Megiddo's preliminary example is in fact very similar to the MRC algorithm presented above.
+                                          The idea of the \( B \) algorithm, <i>i.e.</i> the minimum ratio cycle, is solved by parametrically employing algorithm \( A \),
+                                          <i> i.e. </i> the shortest simple cycle, over an interval \( [e, f] \).
+                                          <br><br>
+                                          Whenever we try to solve for \( t' \) in step <b>1</b>, a comparison between two linear functions
+                                          \( c_{1}(t) = u_{ij}^{(m)} \) and \( c_{2}(t) = u_{im}^{(m)} + u_{mj}^{(m)} \)
+                                          has to be made to consider an update of the interval \( [e, f] \). When the algorithm gets to step <b>3</b>,
+                                          the result of this comparison could be a piecewise linear function \( c_{3}(t) = \min{(c_{1}(t), c_{2}(t))} \),
+                                          with one breakpoint at most. This breakpoint is then tested by running the \( A \) algorithm on it, <i>i.e.</i>
+                                          the shortest simple cycle.
+                                          <br><br>
+                                          In the same fashion as the preliminary example, postponing the evaluation of each critical point by algorithm \( A \),
+                                          results in a set of critical points \( e = t_{0} < t_{1} < \dots < t_{k} = f \), where each subinterval corresponds
+                                          with a piecewise linear function over \( [t_{i-1}, t_{i}] \). Provided that the critical values
+                                          \( t_{0}, t_{1}, \dots t_{k}\) are sorted, finding a subinterval \( [t_{i-1}, t_{i}] \) can be done by employing a binary search as
+                                          in the first example.
+                                        </p>
                                       </div><!--//section-block-->
-
-
-
                             </section> <!--//doc-section-->
+                            <section id="conclusion" class="doc-section">
+                                <h2 class="section-title">Conclusion and Outlook</h2>
+                                <div class="section-block">
+                                  <p class="text-justify">
+                                    In this work we have studied two in-depth examples of parametric search. The first being a more artificial example,
+                                    and the second a formulation minimization problem. While both problems seem different at first glance,
+                                    the parametric search formulation of both problems shows to be surprisingly similar. The general nature and applicability of
+                                    parametric search contribute to its success as an optimization technique for
+                                    a wide range of problems <a class="scrollto" href="#ref-1">[1]</a> in combinatorial optimization and computational geometry.
+                                    <br><br>
+                                    In a nutshell <a class="scrollto" href="#ref-8">[8]</a>, parametric search uses a decision problem \( P(\lambda) \) that is monotone
+                                    in parameter \( \lambda \in \mathbb{R} \), meaning that if \( P(\lambda) = v\) then \( P(\lambda') = v \) for all \( \lambda' < \lambda \).
+                                    The goal is then to solve the optimization problem of finding an optimal value \( \lambda^{*} \) that is the
+                                    largest value satisfying \( P(\lambda^{*}) = v \).
+                                    <br><br>
+                                    Despite the success, algorithms based on parametric search are considered difficult to implement, making it primarily of theoretical interest.
+                                    We found that the formulations of problems could benefit from more visual representations of the setting, yielding faster intuitions of
+                                    how parametric search can be used in different settings. We would also incorporate more practical implementations, as the gap between theoretical algorithms
+                                    and their implementation is often bigger than one might expect. The benefit of using JavaScript in this case is that
+                                    imlementations can easily be run in the browser, without installations of any kind. With technologies like
+                                    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers"> web workers</a>, even parallelism could be
+                                    incorporated in the algorithms, making it easier for other researchers to quickly explore and test these algorithms.
+                                  </p>
+                                </div>
+                            <section
                             <section id="references" class="doc-section">
                                 <h2 class="section-title">References</h2>
                                 <div class="section-block">
@@ -887,6 +948,18 @@
                                       </div>
                                     </div>
                                   </div>
+                                  <div class="container" id="ref-8">
+                                    <div class="row">
+                                      <div class="col-1">
+                                        <p>[8]</p>
+                                      </div>
+                                      <div class="col-11">
+                                        <p class="text-justify">
+                                        Ilinkin, I. (2013, June). Parametric search visualization. In Proceedings of the twenty-ninth annual symposium on Computational geometry (pp. 343-344). ACM.
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                             </section><!--//doc-section-->
                         </div><!--//content-inner-->
@@ -897,6 +970,7 @@
 	                                <a class="nav-link scrollto" href="#abstract">Abstract</a>
                                   <a class="nav-link scrollto" href="#preliminary">Megiddo's Preliminary Example</a>
                                   <a class="nav-link scrollto" href="#mrc">Minimum Ratio Cycle (MRC)</a>
+                                  <a class="nav-link scrollto" href="#conclusion">Conclusion and Outlook</a>
                                   <a class="nav-link scrollto" href="#references">References</a>
                                 <!--
 	                                <a class="nav-link scrollto" href="#installation-section">Head</a>

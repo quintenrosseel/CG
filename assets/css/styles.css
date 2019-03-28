@@ -10,23 +10,23 @@
 /* ======= Base ======= */
 
 
-ol ul li{
+.custom-list ul li{
   list-style-type: disc;
 }
 }
-ol {
+.custom-list {
   margin:0 0 1.5em;
   padding:0;
 }
 
-ol>li {
+.custom-list>li {
   margin:0;
   padding:0 0 0 2em;
   text-indent:-2em;
   list-style-type: none;
 }
 
-ol>li:before {
+.custom-list>li:before {
   display:inline-block;
   width:1.5em;
   padding-right:0.5em;
@@ -37,7 +37,7 @@ ol>li:before {
 }
 
 
-ol:first-of-type {
+.custom-list:first-of-type {
   counter-reset: item -1;
 }
 

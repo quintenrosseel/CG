@@ -251,7 +251,18 @@ function reconstruct_path(start, end, dp, next, detect_cycle) {
 }
 
 /*
-Removes edges from the matrix between nodes {0..m-1}, except edges to / from i,j.
+Description
+  Represents the u_{ij}^{m}(t) function: Returns a function that gives
+  the length of a shortest simple path from i to j, only using nodes 1 ... m - 1
+Input:
+  - Adjacency Matrix: X
+  - Cost Matrix: A
+  - Time Matrix: B
+  - m: Upper bound of set of nodes {1 ... m-1}
+Return Values:
+  - function f(t, i, j) that returns the length of a shortest path between
+    nodes
+
 */
 function remove_edges_from_m(adj_matrix, m, i, j) {
   // Deepcopy of array.
@@ -290,12 +301,8 @@ Set detect_cycle to false if you want to detect APSP with d_ii = 0 when using re
 Set detect_cycle true to enbable shortest cycle through node with d_ii != 0 when using reconstruct_path.
 */
 function parameterize(adj_matrix, cost_matrix, time_matrix, detect_cycle) {
-  let adj_matrix_local = clone_array(adj_matrix);
-  let cost_matrix_local = clone_array(cost_matrix);
-  let time_matrix_local = clone_array(time_matrix);
-
   return function(t) {
-    let C = construct_C(t, adj_matrix_local, cost_matrix_local, time_matrix_local);
+    let C = construct_C(t, adj_matrix, cost_matrix, time_matrix);
     const ones = create_square_ones_matrix(cost_matrix.length);
     return floyd_warshall(adj_matrix, C, ones, detect_cycle); // c_{ij}/1 = c_{ij}
   }
@@ -376,6 +383,10 @@ function piecewise_linear_root(f, breakpointX, min_range, max_range) {
 Get the MRC usin parameterization.
 */
 function mrc(adj_matrix, cost_matrix, time_matrix) {
+  // console.log("MRC called with adj_matrix = ", adj_matrix);
+  // console.log("MRC called with cost_matrix = ", cost_matrix);
+  // console.log("MRC called with time_matrix = ", time_matrix);
+
   // Implements step 0 of algorithm: initialise.
   let e = -Infinity;
   let f = Infinity;
@@ -383,36 +394,60 @@ function mrc(adj_matrix, cost_matrix, time_matrix) {
   let n = adj_matrix.length - 1;
   let u_memoize = create_cube_matrix(n+1); // Nesting: m -> i -> j. Contains minimization functions.
   let mrc;
+  /*
+  let u_ij;
+  let u_im;
+  let u_mj;
+  */
 
   // Implements step 1 of algorithm: solve for t in: u_ij - i_im - i_mj = 0
   function solve_for_t() {
+    // console.log("Solving for t with i = " + String(i) + ", j = " + String(j) + ", m = " + String(m) + ".");
+    // console.log("The current search interval is [" + String(e) + ", " + String(f) + "].");
     let u_ij = function(t, m, i, j) {
       // Check if matrix was set by step 3 (update_apsp)
       if(m > 0 && u_memoize[m][i][j]) {
+        //console.log("Using the memoization! ");
+        //return u_memoize[m][i][j](t); // Use memoized value.
+        //console.log("The memoized value of ij is ", u_memoize[m][i][j](t, m, i, j));
+        //console.log("The (memoized) value u_ij with i: " + String(i) + ", j: " + String(j) + ", m: " + String(m) + " is: " + String(u_memoize[m][i][j](t, m, i, j)));
         return u_memoize[m][i][j](t, m, i, j);
       } else {
         let apsp = u_matrix(adj_matrix, cost_matrix, time_matrix, i, j, m);
         let apsp_matrix = apsp(t)[0];
+        //console.log("The apsp matrix where we look for ij: ", apsp_matrix);
+        //console.log("The value u_ij with i: " + String(i) + ", j: " + String(j) + ", m: " + String(m) + " is: " + String(apsp_matrix[i][j]));
         return apsp_matrix[i][j];
       }
     }
     let u_im = function(t, m, i, j) {
       let apsp = u_matrix(adj_matrix, cost_matrix, time_matrix, i, j, m);
       let apsp_matrix = apsp(t)[0];
+      //console.log("The apsp matrix where we look for im: ", apsp_matrix);
+      //console.log("The value u_im with i: " + String(i) + ", j: " + String(j) + ", m: " + String(m) + " is: " + String(apsp_matrix[i][m]));
       return apsp_matrix[i][m];
     }
     let u_mj = function(t, m, i, j) {
       let apsp = u_matrix(adj_matrix, cost_matrix, time_matrix, i, j, m);
       let apsp_matrix = apsp(t)[0];
+      //console.log("The apsp matrix where we look for mj: ", apsp_matrix);
+      //console.log("The value u_mj with i: " + String(i) + ", j: " + String(j) + ", m: " + String(m) + " is: " + String(apsp_matrix[j][m]));
       return apsp_matrix[m][j];
     }
-    let lhs = function(t) {
+    let lhs  = function(t) {
+      // let current_i = i;
+      // let current_j = j;
+      // let current_m = m;
       // Pass the global t, m, i, j variables.
       const val = u_ij(t, m, i, j) - u_im(t, m, i, j) - u_mj(t, m, i, j);
+      //console.log("The value lhs with i: " + String(i) + ", j: " + String(j) + ", m: " + String(m) + ", t: " + String(t) + " is: " + String(val));
       return val;
     }
     let t_prime_p = piecewise_linear_root(lhs, 0, e, f); // t'
     if(t_prime_p){  // Unique solution: go to step 3.
+      // console.log("e: ", e);
+      // console.log("f: ", f);
+      // console.log("Unique solution found: ", t_prime_p.x);
       return check_cycles(t_prime_p.x);
     } else {      // Infinite amount of solutions: go to step 4.
       //console.log("No solution found, updating parameters. ");
@@ -429,18 +464,27 @@ function mrc(adj_matrix, cost_matrix, time_matrix) {
     // cycle_matrices[0] = Matrix with distances.
     // cycle_matrices[1] = Path reconstruction matrix.
     let cycle_matrices = apsp_cycles(t);
+
+    //console.log("cles with: ", cycle_matrices[0]);
+    //console.log("Checking negative cycles with: ", cycle_matrices[0]);
     let negative_cycle = has_negative_cycle(cycle_matrices[0]);
     let zero_cycle = find_zero_cycle(cycle_matrices[0], cycle_matrices[1]);
 
     if(!negative_cycle && zero_cycle) {
+      //console.log("No negative cycle and zero cycle found. ");
       // If there is a zero cycle and no negative cycle, terminate with the zero cycle as minimum ratio cycle.
+      //console.log("No interval update. ");
       return find_zero_cycle(t, adj_matrix, cost_matrix, time_matrix);
     } else if(negative_cycle) {
+      //console.log("Negative cycle found, updating upper bound with: ", t);
       // If there is a negative cycle, update the upperbound f of the search interval to t′.
+      //console.log("Updating upper bound.");
       f = t;
       return update_apsp(t);
     } else {
+      // console.log("No negative cycles found, updating lower bound with: ", t);
       // If all cycles are positive, update the lowerbound e of the search interval to t′.
+      //console.log("Updating lower bound.");
       e = t;
       return update_apsp(t);
     }
@@ -449,6 +493,13 @@ function mrc(adj_matrix, cost_matrix, time_matrix) {
   // Implements step 3 of the algorithm.
   function update_apsp(t) {
     if((m + 1) <= n) {
+      // Closure with current snapshot of scope.
+      /*
+      let current_i = i;
+      let current_j = j;
+      let current_m = m;
+  */
+
       let u_ij = function(t, m, i, j) {
         let apsp = u_matrix(adj_matrix, cost_matrix, time_matrix,
                             i, j, m);
@@ -467,6 +518,9 @@ function mrc(adj_matrix, cost_matrix, time_matrix) {
         let apsp_matrix = apsp(t)[0];
         return apsp_matrix[m][j];
       }
+
+      // let rhs = (u_im(t, current_m, current_i, current_j) +
+      //            u_mj(t, current_m, current_i, current_j));
 
       u_memoize[m+1][i][j] = function(t, m, i, j) {
         let rhs = (u_im(t, m, i, j) +
@@ -500,19 +554,23 @@ function mrc(adj_matrix, cost_matrix, time_matrix) {
 
   // Implements step 5 of the algorithm. (Terminates)
   function find_k() {
+    // console.log("Finding k.");
     let apsp_cycles = parameterize(adj_matrix, cost_matrix, time_matrix, true);
     let apsp_matrices;
 
     // Pick max range.
     if(f == Infinity && e == -Infinity){
-      let num = randFloatBetween(-80, 80);
+      let num = randFloatBetween(-20, 20);
       apsp_matrices = apsp_cycles(num);
     } else if(f == Infinity && e > -Infinity){
+      //let num = randFloatBetween(e, 20);
       apsp_matrices = apsp_cycles(80);
     } else {
       // F is not infinity, use upper limit of range.
       apsp_matrices = apsp_cycles(f);
     }
+    // console.log("DP Matrix: ", apsp_matrices[0]);
+    // console.log("Next Matrix: ", apsp_matrices[1]);
     return find_shortest_cycle(apsp_matrices[0], apsp_matrices[1]);
   }
 

@@ -281,7 +281,7 @@ window.addEventListener('load', function () {
     }
   });
 
-  let cy4= cytoscape({
+  let cy4 = cytoscape({
     container: document.getElementById('graph-vis-4'),
     // elements: matrices_to_cyt(A_4, C_4, create_square_ones_matrix(C_4.length)),
     style: [ // the stylesheet for the graph

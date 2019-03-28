@@ -1,3 +1,7 @@
+let A_4;
+let C_4;
+let T_4;
+
 // Global vars.
 class Point {
   constructor(x, y) {
@@ -22,7 +26,7 @@ var val = 0;
 var origin = new Point(0,0);
 
 // Get element by class.
-function getElementsByClassName(node,classname) {
+function getElementsByClassName(node, classname) {
   if (node.getElementsByClassName) { // use native implementation if available
     return node.getElementsByClassName(classname);
   } else {
@@ -75,6 +79,11 @@ function getLineEqPoint(p1, p2) {
 //Get random float between two numbers
 function randFloatBetween(min, max) {
   return Number((Math.random() * (max - min) + min).toFixed(2));
+}
+
+//Get random int between two numbers
+function randIntBetween(min, max) {
+  return Math.floor((Math.random() * max) + min);
 }
 
 // Megiddo's function inside the set.
@@ -306,24 +315,45 @@ window.addEventListener('load', function () {
 
   // Matrices for function plot.
   // Example for visualisation 4.
-  const A_4 = [
+  A_4 = [
     [0, 1, 1, 1],
     [1, 0, 1, 1],
     [1, 1, 0, 1],
     [1, 1, 1, 0],
   ];
-  const C_4 = [
+  C_4 = [
     [0, 1, 11, 4],
     [4, 0, 5, 7],
     [9, 4, 0, 3],
     [8, 9, 2, 0],
   ];
-  const T_4 = [
+  T_4 = [
     [0, 3, 5, 2],
     [8, 0, 1, 6],
     [3, 9, 0, 5],
     [3, 7, 1, 0],
   ];
+
+  // Cost of [0, 1, 0] == 12.5
+
+  // const A_4 = [
+  //   [0, 1, 1, 1],
+  //   [1, 0, 1, 1],
+  //   [1, 1, 0, 1],
+  //   [1, 1, 1, 0],
+  // ];
+  // const C_4 = [
+  //   [0, 30, 11, 4],
+  //   [20, 0, 5, 7],
+  //   [9, 4, 0, 3],
+  //   [8, 9, 2, 0],
+  // ];
+  // const T_4 = [
+  //   [0, 3, 5, 2],
+  //   [8, 0, 1, 6],
+  //   [3, 9, 0, 5],
+  //   [3, 7, 1, 0],
+  // ];
 
   // Second function visualisation canvas.
   var vis_2 = function(sketch) {
@@ -341,26 +371,29 @@ window.addEventListener('load', function () {
     let graph_m_label_i = document.getElementById('m_slider_2_label_i');
 
     // Remove edges that should not be considered by parameterization.
-    const A_4_ij = remove_edges_from_m(A_4, graph_m, graph_i, graph_j);
-    const A_4_im = remove_edges_from_m(A_4, graph_m, graph_i, graph_m);
-    const A_4_mj = remove_edges_from_m(A_4, graph_m, graph_m, graph_j);
-
-    /*
-    console.log("A_4", A_4);
-    console.log("ij", clone_array(A_4_ij));
-    console.log("im", clone_array(A_4_im));
-    console.log("mj", clone_array(A_4_mj));
-  */
+    let A_4_ij = remove_edges_from_m(A_4, graph_m, graph_i, graph_j);
+    let A_4_im = remove_edges_from_m(A_4, graph_m, graph_i, graph_m);
+    let A_4_mj = remove_edges_from_m(A_4, graph_m, graph_m, graph_j);
 
     // Parameterize without cycle detection, i.e. APSP.
-    const f_ij = parameterize(A_4_ij, C_4, T_4, false);
-    const f_im = parameterize(A_4_im, C_4, T_4, false);
-    const f_mj = parameterize(A_4_mj, C_4, T_4, false);
+    let f_ij = parameterize(A_4_ij, C_4, T_4, false);
+    let f_im = parameterize(A_4_im, C_4, T_4, false);
+    let f_mj = parameterize(A_4_mj, C_4, T_4, false);
+
+    // console.log("A_4", A_4);
+    // console.log("ij", clone_array(A_4_ij));
+    // console.log("im", clone_array(A_4_im));
+    // console.log("mj", clone_array(A_4_mj));
 
     // Construct arrays to plot functions.
     let f_ij_values = calculate_f_values(f_ij, graph_i, graph_j);
     let f_im_values = calculate_f_values(f_im, graph_i, graph_m);
     let f_mj_values = calculate_f_values(f_mj, graph_m, graph_j);
+
+    // console.log("f_ij values", f_ij_values);
+    // console.log("f_im values:", f_im_values);
+    // console.log("f_mj values: ", f_mj_values);
+
     let f_rhs_values = f_im_values.map(function(el, i) {
       return el + f_mj_values[i];
     });
@@ -381,8 +414,23 @@ window.addEventListener('load', function () {
           graph_m = srcVal;
           graph_m_label_i.innerHTML = String(srcVal);
         }
+
+        // Update arrays and functions.
+        let A_4_ij = remove_edges_from_m(A_4, graph_m, graph_i, graph_j);
+
+        //console.log("A_4_ij", A_4_ij);
+
+        let A_4_im = remove_edges_from_m(A_4, graph_m, graph_i, graph_m);
+        let A_4_mj = remove_edges_from_m(A_4, graph_m, graph_m, graph_j);
+
+        // Parameterize without cycle detection, i.e. APSP.
+        let f_ij = parameterize(A_4_ij, C_4, T_4, false);
+        let f_im = parameterize(A_4_im, C_4, T_4, false);
+        let f_mj = parameterize(A_4_mj, C_4, T_4, false);
+
         // Recalculate function values.
         f_ij_values = calculate_f_values(f_ij, graph_i, graph_j);
+        //console.log("f_ij values: ", f_ij_values);
         f_im_values = calculate_f_values(f_im, graph_i, graph_m);
         f_mj_values = calculate_f_values(f_mj, graph_m, graph_j);
         f_rhs_values = f_im_values.map(function(el, i) {
@@ -464,7 +512,7 @@ window.addEventListener('load', function () {
       sketch.stroke(200,200,0);
       plot_f(f_rhs_values);
 
-
+      /*
       const f1_p1_min = new Point(minrange, f_ij_values[0]);
       const f1_p2_min = new Point(minrange + stepsize, f_ij_values[1]);
       const f2_p1_min = new Point(minrange, f_rhs_values[0]);
@@ -505,12 +553,9 @@ window.addEventListener('load', function () {
         sketch.noStroke();
         sketch.ellipse(intersection2.x, intersection2.y, 2, 2)
       }
-
+*/
     };
   };
-
-  // Call the beast.
-  console.log("The minimum ratio cycle is: ", mrc(A_4, C_4, T_4));
 
   // Attach sketches to DOM.
   var myp5_1 = new p5(vis_1, document.getElementById('func-vis-1'));
