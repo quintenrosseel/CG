@@ -106,18 +106,18 @@
                                 <div class="section-block">
                                   <p class="text-justify">
                                     <!-- Properly define the function. -->
-                                    Let \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \ | \ i = 1 \dots n \} \)
+                                    Let \( \{f_{1}(\lambda), \dots, f_{n}(\lambda)\} \)
                                     be a set of pairwise distinct functions of \( \lambda \) such that
                                     \( f_{i}(\lambda) = a_{i} + b_{i}\lambda \ | \ b_{i} > 0 \).
-                                    Next, let \( F(\lambda) \) denote the median of the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \)
+                                    Next, let \( F(\lambda) \) denote the median of the set \( \{f_{1}(\lambda), \dots, f_{n}(\lambda) \} \)
                                     for every \( \lambda \in \mathbb{R} \). Finally, let \( \lambda_{ij} \) denote the intersection of
-                                    two distinct functions \( f_{i} \) and \( f_{j} \) in the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \),
+                                    two distinct functions \( f_{i} \) and \( f_{j} \) in the set \( \{f_{1}(\lambda), \dots, f_{n}(\lambda) \} \),
                                     such that \( a_{i} + b_{i}\lambda_{ij} = a_{j} + b_{j}\lambda_{ij} \) with \( i \neq j\).
                                   </p>
                                   <p class="text-justify">
                                     <b>Function Visualisation</b>
                                     <br> <br>
-                                    To showcase how functions from the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) behave, consider
+                                    To showcase how functions from the set \( \{f_{1}(\lambda), \dots, f_{n}(\lambda) \} \) behave, consider
                                     an interactive visualisation of three functions \( f_{1}(\lambda) = a_{1} + b_{1}\lambda, \
                                     f_{2}(\lambda) = a_{2} + b_{2}\lambda \) and
                                     \( \ f_{3}(\lambda) = a_{3} + b_{3}\lambda \ \)
@@ -243,8 +243,8 @@
                                         at most \( \frac{n^{2} - n }{2} \) intersections</a>, the upper bound for breakpoints is \( O(n^{2}) \).
                                       It is straightforward to see now that if we are given \( \lambda \), we can evaluate \( F(\lambda) \)
                                       using a <a href="assets/files/linear_selection.pdf" target="_blank">linear-time selection algorithm </a> <a class="scrollto" href="#ref-4">[4]</a> such that
-                                      \( F(\lambda) \) can be evaluated with \( O(n) \) comparisons.
-                                      <br><br>
+                                      \( F(\lambda) \) can be evaluated with \( O(n) \) comparisons when all \( f_{i}(\lambda) \)'s have been computed.
+                                    <br><br>
                                       <b>A first serial attempt</b>
                                       <br><br>
                                       If we were to try to find a \( \lambda \) such that
@@ -262,10 +262,12 @@
                                       <br>
                                     </p>
                                     <p class="text-justify">
+                                      The set of intersection points can be sorted and binary-searched for an interval \([\lambda^{i},  \lambda^{i+1}]\)
+                                      that requires \( O(log(n)) \ F\) evaluations in which the
+                                      cardinalities of the searched sets are \( n, \frac{n}{2}, \frac{n}{4}, \dots \ \).
                                       As \( F(\lambda) \) is linear over the interval \([\lambda^{1},  \lambda^{2}]\), the intersection with the origin
-                                      can be found in \( O(1) \) once \( \lambda^{1} \) and \( \lambda^{2} \) are known. Because our function is monotone-increasing,
-                                      the search for such an interval can be found with a binary search that requires \( O(log(n)) \ F\) evaluations in which the
-                                      cardinalities of the searched sets are \( n, \frac{n}{2}, \frac{n}{4}, \dots \ \). The total running time of this algorithm
+                                      can be found in \( O(1) \) once \( \lambda^{1} \) and \( \lambda^{2} \) are known.
+                                      The total running time of this algorithm
                                       is \( O(n^{2} + n \ log(n)) \) = \( O(n^{2})\),
                                       where the dominating factor is the evaluation of all the intersection points \( \lambda_{ij} \),
 
@@ -280,21 +282,23 @@
                                       With this interval, we can solve for the origin in a single step.
                                       <br><br>
                                       Let \( \lambda^{*} \) be the unknown solution to \( F(\lambda^{*}) = 0 \). In order to evaluate \( F \) by
-                                      a linear-time median algorithm, the value of \( \lambda \) needs to be known to compare each
-                                      \( f_{i}(\lambda) \) and \( f_{j}(\lambda) \) in the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \). Nevertheless,
+                                      a linear-time median algorithm, a value \( \lambda \) needs to be known to compare each
+                                      \( f_{i}(\lambda) \) in the set \( \{f_{1}(\lambda), \dots, f_{n}(\lambda) \} \). Nevertheless,
                                       we know that only intersection points \( \lambda_{ij} \ | \ i \neq j \)
-                                      really matter for the comparison of the median algorithm (they are critical values): if \( \lambda \geq \lambda_{ij} \), then we know that
+                                      really matter for the comparison of the median algorithm as they are critical values.
+                                      Calculating the intersection point \( \lambda_{ij} \) itself does not require an input value \( \lambda \)
+                                      and we know that for any input value \( \lambda \): if \( \lambda \geq \lambda_{ij} \), then
                                       \( f_{i} (\lambda) \geq f_{j}(\lambda) \) whereas for \( \lambda \leq \lambda_{ij} \) we know that
                                       \( f_{i} (\lambda) \leq f_{j}(\lambda) \), or vice versa.
                                       <br><br>
                                       So when we consider two functions \( f_{i} (\lambda) \) and \( f_{j} (\lambda) \), all we really need is the intersection
-                                      point \( \lambda_{ij} \) to compare \( F(\lambda_{ij}) \) and \(0\) to solve for \( F(\lambda^{*}) = 0 \). As each
-                                      function is monotone increasing, we know that if the sign
+                                      point \( \lambda_{ij} \) to compare \( F(\lambda_{ij}) \) and \(0\) to solve for \( F(\lambda^{*}) = 0 \).
+                                      As each function is monotone increasing, we know that if the sign
                                       of \( F(\lambda_{ij}) \) is negative, then \( \lambda^{*} \geq \lambda_{ij} \) and if the sign
                                       is positive, then \( \lambda^{*} \leq \lambda_{ij} \).
                                       <br><br>
                                       The remark above suggests a parallel algorithm, as each intersection point \( \lambda_{ij} \) of two
-                                      functions in the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) can be computed and compared independently
+                                      functions in the set \( \{f_{1}, \dots, f_{n} \} \) can be computed and compared independently
                                       with a shared variable that keeps track of the smallest interval bounds so far. If an intersection point \( \lambda_{ij} \) lies between the
                                       current bounds \( [\lambda_{min}, \lambda_{max}]\) then we can update that interval to be either
                                       \( [\lambda_{ij}, \lambda_{max}]\) or \( [\lambda_{min}, \lambda_{ij}]\) depending on the sign of \( F(\lambda_{ij}) \).
@@ -303,10 +307,9 @@
                                      and the interval can remain as is.
                                      <br><br>
                                      In serial time, the total running time remains \( O(n^{2}) \) as we have to gather all intersections
-                                     of the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) in \( O(n^{2}) \) and
-                                     compare the resulting critical points in \( O(n) \) that each may require a \( O(n) \)
+                                     of the set \( \{f_{1}, \dots, f_{n} \} \) in \( O(n^{2}) \) and
+                                     out of all intersections, only \( O(n) \) critical points may require a \( O(n) \)
                                      median finding to evaluate \( F \), leaving us with \( O(n^{2} + n^{2}) = O(n^{2}) \).
-                                     Let's see if we can do better with parallelism.
                                      <br><br>
                                      <b>Speeding Up with Parallelism</b>
                                      <br><br>
@@ -321,7 +324,7 @@
                                      for sorting \( n \) values on a machine with \( P \) processors.
                                      <br><br>
                                      As already mentioned, the intersection \( \lambda_{ij} \) of two functions \( f_{i} \) and \( f_{j} \)
-                                     from the set \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \) can be computed in \( O(1) \) such that one step in the simulated
+                                     from the set \( \{f_{1}, \dots, f_{n} \} \) can be computed in \( O(1) \) such that one step in the simulated
                                      multiprocessor yields \( P \) critical values. As suggested in the explanation of the previous algorithm, these comparisons can
                                      happen independently of each other.
                                      <br><br>
@@ -350,7 +353,7 @@
                                       In the example below \( F(\lambda) \) is shown with all \( a_{i} \)'s, uniformly drawn from
                                       an interval \( [a_{min}, a_{max}] \) and all \( b_{i} \)'s, uniformly drawn from
                                       an interval \( [b_{min}, b_{max}] \) with \( b_{min}, b_{max} > 0 \). The last slider for \( n \) determines the number of functions in the set
-                                      \( \{f_{i}(\lambda), \dots, f_{n}(\lambda) \} \).
+                                      \( \{f_{1}(\lambda), \dots, f_{n}(\lambda) \} \).
 
                                       -->
                                       <!-- Function Sliders -->
