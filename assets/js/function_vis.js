@@ -220,7 +220,7 @@ window.addEventListener('load', function () {
     var elements = getElementsByClassName(document, "range-1"), n = elements.length;
     for (var i = 0; i < n; i++) {
       var e = elements[i];
-      e.addEventListener("mouseup", function(e){
+      e.addEventListener("pointerup", function(e){
         var srcId = e.srcElement.id;
         var srcVal = Number(e.srcElement.value);
         if(srcId == "a_1_slider_1") {
@@ -401,7 +401,7 @@ window.addEventListener('load', function () {
     // Attach event listener to all range sliders to update functions.
     for (var i = 0; i < elements.length; i++) {
       var e = elements[i];
-      e.addEventListener("mouseup", function(e) {
+      e.addEventListener("pointerup", function(e) {
         var srcId = e.srcElement.id;
         var srcVal = Number(e.srcElement.value);
         if(srcId == "i_slider_2") {
@@ -417,26 +417,38 @@ window.addEventListener('load', function () {
 
         // Update arrays and functions.
         let A_4_ij = remove_edges_from_m(A_4, graph_m, graph_i, graph_j);
-
-        //console.log("A_4_ij", A_4_ij);
-
         let A_4_im = remove_edges_from_m(A_4, graph_m, graph_i, graph_m);
         let A_4_mj = remove_edges_from_m(A_4, graph_m, graph_m, graph_j);
+
+        // console.log("A_4_mj: ", A_4_mj);
+        // console.log("A_ij", A_4_ij);
+        // console.log("A_im", A_4_im);
+        // console.log("A_mj", A_4_mj);
 
         // Parameterize without cycle detection, i.e. APSP.
         let f_ij = parameterize(A_4_ij, C_4, T_4, false);
         let f_im = parameterize(A_4_im, C_4, T_4, false);
         let f_mj = parameterize(A_4_mj, C_4, T_4, false);
 
+
+
         // Recalculate function values.
+        //console.log("ij values with m:", graph_m);
         f_ij_values = calculate_f_values(f_ij, graph_i, graph_j);
-        //console.log("f_ij values: ", f_ij_values);
+
+        //console.log("im values with m:", graph_m);
         f_im_values = calculate_f_values(f_im, graph_i, graph_m);
+
+        //console.log("mj values with m:", graph_m);
         f_mj_values = calculate_f_values(f_mj, graph_m, graph_j);
+
+
         f_rhs_values = f_im_values.map(function(el, i) {
           return el + f_mj_values[i];
         });
 
+
+        // 
         // console.log("i (" + String(graph_i)+") to j (" + String(graph_j) + "): ", f_ij_values,
         //             "i (" + String(graph_i)+") to m (" + String(graph_m) + "): ", f_im_values,
         //             "m (" + String(graph_m)+") to j (" + String(graph_j) + "): ", f_mj_values,
@@ -448,14 +460,29 @@ window.addEventListener('load', function () {
       const steps = (maxrange - minrange)/stepsize;
       let f_values = new Array(steps);
       let step = 0;
+      let apsp_matrix;
 
       // Calculate the f values.
       for(var t = minrange; t < maxrange; t = t + stepsize) {
         // Returns array of [dp, next]
-        let apsp_matrix = f(t)[0];
+        apsp_matrix = f(t)[0];
+        // console.log(
+        //   "APSP Matrix: ",
+        //   apsp_matrix
+        // )
         f_values[step] = apsp_matrix[start_vertex][end_vertex];
         step++;
       }
+
+      // console.log("Matrix: ", apsp_matrix);
+      // console.log(
+      //   "Start vertex: ",
+      //   start_vertex,
+      //   "End Vertex: ",
+      //   end_vertex,
+      //   "Function Values: ",
+      //   f_values
+      // );
       return f_values;
     }
 

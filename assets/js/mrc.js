@@ -250,24 +250,41 @@ function reconstruct_path(start, end, dp, next, detect_cycle) {
   return path;
 }
 
+// Function to check edges that are removable.
+function can_remove_edges(m, i, j) {
+  return function(k, l) {
+    if (((k == (m - 1)) || (k == i) || (k == j)) && ((l == (m - 1)) || (l == i) || (l == j))) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
 /*
 Removes edges from the matrix between nodes {0..m-1}, except edges to / from i,j.
 */
 function remove_edges_from_m(adj_matrix, m, i, j) {
   // Deepcopy of array.
   let new_adj_matrix = clone_array(adj_matrix);
+  let check = can_remove_edges(m, i, j);
+
+  //console.log("m, i, j: ", m, i, j)
 
   // Remove edges from m to X.length onwards such that only 1 .. m - 1 can be
   // can be used as intermediary nodes.
   for(var k = m; k < new_adj_matrix.length; k++) {
     // Remove any edge from and to m
     for(var l = 0; l < new_adj_matrix.length; l++) {
-        if(!((k == j || k == i ) && (l == j || l == i ))) {
+        //if(!((k == j || k == i ) && (l == j || l == i ))) {
+        //if(!((k == i && l == (m-1) ) || (k == (m-1) && l == j ))) {
+        if(check(k, l)){
           new_adj_matrix[k][l] = 0;
           new_adj_matrix[l][k] = 0;
         }
     }
   }
+  //console.log("Matrix after removals: ", new_adj_matrix);
   return new_adj_matrix;
 }
 
@@ -296,6 +313,7 @@ function parameterize(adj_matrix, cost_matrix, time_matrix, detect_cycle) {
 
   return function(t) {
     let C = construct_C(t, adj_matrix_local, cost_matrix_local, time_matrix_local);
+    // console.log("Executing for t = ", t, "C: ", C);
     const ones = create_square_ones_matrix(cost_matrix.length);
     return floyd_warshall(adj_matrix, C, ones, detect_cycle); // c_{ij}/1 = c_{ij}
   }

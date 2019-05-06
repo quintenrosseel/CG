@@ -93,7 +93,10 @@
                                     Finally, we present an attempt at an implementation of the parameterization method for the
                                     MRC, inspired on <a href="assets/files/megiddo_earlier.pdf" target="_blank">Megiddo's earlier work</a>
                                     <a class="scrollto" href="#ref-3">[3]</a> and conclude with some remarks and outlooks.
-<!--
+                                    <br><br>
+                                    My presentation that covers this project in more depth can be found <a href="assets/files/presentation.pdf" target="_blank">here.</a>
+
+                                    <!--
                                     and using
                                     <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API" target="_blank">Mozilla’s Web Worker API</a> for
                                     concurrent javascript programming. -->
@@ -664,7 +667,7 @@
                                             Now, let \( u_{ij}^{(m)}(t)\) be the length of a shortest simple path from \(i \) to \(j \),
                                             only using nodes from the set \( \{1 \dots m-1 \} \cup \{i, j\} \) and using a
                                             distance function \( c_{ij}(t) = a_{ij} - tb_{ij} \), the parameterization
-                                            that is core element for algorithm \( B \). In our implementation, this is represented as a
+                                            that is a core element for algorithm \( B \). In our implementation, this is represented as a
                                             function \( f(t) \) that is returned from a call to the function \(parameterize(A, C, T)\), where
                                             \(A\) is an adjacency matrix, \(C\) is a cost matrix and \(T\) a time matrix for the given problem.
                                             <br><br>
@@ -782,7 +785,7 @@
                                                   <li>If \( i = j = n \) and \( m = n \), then go to step <b> 5</b>. </li>
                                                 </ul>
                                                 <li>
-                                                  Find a \( k\) such that \( u_{kk}^{n+1}(k) < 0\). The minimum ratio cycle is the shortest simple cycle with respect
+                                                  Find a \( k\) such that \( u_{kk}^{n+1}(f) < 0\). The minimum ratio cycle is the shortest simple cycle with respect
                                                   to the distance metric \( c_{ij}(f)\) that contains \( k \).
                                                 </li>
                                               </ol>
@@ -801,7 +804,7 @@
                                         <p class="text-justify">
                                           We note however that this implementation is not fully waterproof due to unclarity in the algorithm specification.
                                           For example, we do not know what should be done in the case that the upper bound of the search interval \( f \), remains \( \infty \).
-                                          This can be the case when no single unique solution \( t' \) gives rise to a negative cycle during the execution of the MRC algorithm in step <b>3</b>.
+                                          This can be the case when no single unique solution \( t' \) gives rise to a negative cycle during the execution of the MRC algorithm in step <b>2</b>.
                                           <br><br>
                                           As the final step (<b>5</b>) consists of evaluating \(u_{kk}^{(n+1)}(f)\), it is crucial for \( f \) to evaluate to an evaluable value, different from
                                           \( \infty \). Nevertheless, we can still proceed to discuss the parametric properties of the algorithm.
